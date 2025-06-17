@@ -17,14 +17,10 @@ class ProgramBase:
         """
         raise NotImplementedError("Subclasses must implement this method.")
     
-    def execute(self, stdin: str):
+    def execute(self, stdin: str, args: list[str] = None):
         """
         Execute the program with the given arguments.
         This method should be implemented by subclasses.
         """
         raise NotImplementedError("Subclasses must implement this method.")
     
-    def run(self):
-        self.compile()
-        return self.execute()
-

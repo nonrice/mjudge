@@ -1,20 +1,17 @@
 import core.program.program_base
 
-class CppProgram(core.program.program_base.ProgramBase):
+class Python3Program(core.program.program_base.ProgramBase):
     """
-    C++ program type.
+    Python 3 program type.
     Provides methods for compiling and executing C++ programs.
     """
 
     def compile(self):
-        import subprocess
-        compile_command = ["g++", self.source_path, "-o", self.source_filename.replace('.cpp', '')]
-        result = subprocess.run(compile_command, capture_output=True, text=True)
-        return result.returncode, result.stdout, result.stderr
+        return 0, "", ""
 
     def execute(self, stdin: str, args: list[str] = None):
         import subprocess
-        execute_command = [self.source_filename.replace('.cpp', '')]
+        execute_command = ["python3", self.source_path]
         if args is not None:
             execute_command.extend(args)
         result = subprocess.run(execute_command, input=stdin, text=True, capture_output=True)
