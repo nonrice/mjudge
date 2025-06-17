@@ -84,7 +84,7 @@ export default function ContestProblemView() {
                     <textarea id="code" name="code" rows="4" cols="50"></textarea><br />
                     <label htmlFor="language">Language:</label><br />
                     <select id="language" name="language">
-                        <option value="python">Python</option>
+                        <option value="python3">Python</option>
                         <option value="cpp">C++</option>
                         <option value="java">Java</option>
                     </select><br />
