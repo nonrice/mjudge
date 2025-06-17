@@ -1,10 +1,17 @@
+# Use official Python image
 FROM python:3.11-slim
 
+# Set work directory inside container
 WORKDIR /app
-COPY requirements.txt ./
-RUN pip install -r requirements.txt
 
+# Copy requirements first for better caching
+COPY requirements.txt .
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy rest of the grader app
 COPY . .
 
-# Use environment variable to select which app to run
-CMD ["sh", "-c", "flask run --host=0.0.0.0 --port=${PORT:-5000}"]
+# Command to run the polling script
+CMD ["python", "-u", "run.py"]

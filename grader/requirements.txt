@@ -1,7 +1,3 @@
-flask
-flask-cors
-flask-bcrypt
-flask-login
-flask-sqlalchemy
-PyJWT
-requests
+sqlalchemy
+psycopg2-binary
+docker
