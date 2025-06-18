@@ -12,6 +12,8 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/${POSTGRES_DB}
       - PORT=5001
+      - FLASK_ENV=development
+      - CHOKIDAR_USEPOLLING=true
 
   grader:
     build: ./grader
@@ -21,7 +23,7 @@ services:
       - ./grader:/app
       - /var/run/docker.sock:/var/run/docker.sock 
     depends_on:
-      - backend
+      - db 
     environment:
       - PORT=4999
 
@@ -35,6 +37,8 @@ services:
     depends_on:
       - backend
       - db
+    environment:
+      - CHOKIDAR_USEPOLLING=true
 
   db:
     image: postgres:16
@@ -62,6 +66,8 @@ services:
     build: ./grader/worker
     entrypoint: [ "echo", "Worker container should not run by default." ]
     profiles: [ "dont-start" ]
+    depends_on:
+      - db
 
 
 volumes:
