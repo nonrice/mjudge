@@ -59,7 +59,6 @@ export default function ContestProblemView() {
         })
         .then(data => {
             alert('Solution submitted successfully! Submission ID: ' + data.submission_id);
-            alert('Solution submitted successfully!');
             // Handle successful submission (e.g., redirect or update UI)
         })
         .catch(err => {
