@@ -4,7 +4,7 @@ class leaderboard_entry:
         self.username = username
         self.leaderboard = leaderboard
         self.problem_legend = leaderboard.problem_legend
-        self.problem_count = self.problem_legend
+        self.problem_count = len(self.problem_legend)
 
         self.times = [0] * self.problem_count 
         self.attempts = [0] * self.problem_count 
@@ -15,7 +15,7 @@ class leaderboard_entry:
     def set_submission(self, problem_letter, time, accepted):
         index = self.problem_legend[problem_letter]
         self.times[index] = max(self.times[index], time)
-        self.attempts += 1
+        self.attempts[index] += 1
         self.solved[index] = self.solved[index] or accepted
         if accepted:
             self.solves += 1
@@ -28,7 +28,7 @@ class leaderboard_entry:
             if solved:
                 score += self.times[i] + self.attempts[i] * 20
         return score
-    
+    # TODO handle resubmission
     # ICPC ordering
     # Comparison rules: First by solve #, then by score, then by slowest solves, finally undefined
     def __lt__(self, other):
@@ -69,7 +69,7 @@ class leaderboard:
         self.entries[user_id].set_submission(problem_letter, time, accepted)
     
     def get_sorted_entries(self):
-        return sorted(self.entries.values(), reverse=True)
+        return sorted(self.entries.values())
     
     def to_dict(self):
         return {

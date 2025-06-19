@@ -48,10 +48,17 @@ def get_problem(contest_id, problem_letter):
 def get_leaderboard(contest_id):
     submissions = Submissions.query.filter_by(contest_id=contest_id).all()
     users = {sub.user_id: sub.user.username for sub in submissions if sub.user}
-    problem_legend = {p.letter: p.problem_id for p in Contest_Problems.query.filter_by(contest_id=contest_id).all()}
+    problem_legend = { letter : index for index, letter in enumerate(sorted([ p.letter for p in Contest_Problems.query.filter_by(contest_id=contest_id).all() ])) }
     lb = leaderboard.leaderboard(users, problem_legend)
+    start_time = Contests.query.get(contest_id).start_time
     for sub in submissions:
-        lb.set_submission(sub.user_id, sub.problem.letter, sub.timestamp, sub.status == "Accepted")
+        contest_problem = Contest_Problems.query.filter_by(contest_id=contest_id, problem_id=sub.problem_id).first()
+        problem_letter = contest_problem.letter if contest_problem else None
+        if problem_letter is None:
+            continue
+
+        elapsed_time = (sub.timestamp - start_time).total_seconds() // 60
+        lb.set_submission(sub.user_id, problem_letter, elapsed_time, sub.status == "Accepted")
     data = jsonify(lb.to_dict())
 
     return data, 200
