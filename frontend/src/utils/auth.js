@@ -10,6 +10,12 @@ export function getUserFromToken() {
     }
 }
 
+export function isExpired(token) {
+    if (!token) return true;
+    const decoded = jwtDecode(token);
+    return decoded.exp * 1000 < Date.now();
+}
+
 export function getToken() {
     return localStorage.getItem("token");
 }

@@ -1,7 +1,13 @@
-import { getUserFromToken } from "../utils/auth";
+import { getUserFromToken, isExpired, getToken } from "../utils/auth";
 
 export default function Header() {
     const user = getUserFromToken();
+
+    const token = getToken();
+    if (token && isExpired(token)) {
+        localStorage.removeItem("token");
+        window.location.reload();
+    }
 
     return (
         <header>

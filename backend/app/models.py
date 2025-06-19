@@ -9,6 +9,7 @@ class Contests(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     start_time = db.Column(db.DateTime, nullable=False)
+    duration = db.Column(db.Interval, nullable=False)
 
 class Problems(db.Model):
     id = db.Column(db.Integer, primary_key=True)
