@@ -59,6 +59,39 @@ def get_user_submissions(contest_id):
         "feedback": submission.feedback
     } for submission in submissions]), 200
 
+@submissions_bp.route("/submission/<int:submission_id>", methods=["GET"])
+@jwt_required
+def get_submission(submission_id):
+    submission = Submissions.query.get(submission_id)
+    if not submission:
+        return jsonify({"error": "Submission not found"}), 404
+    
+    contest = Contests.query.get(submission.contest_id)
+    if not contest:
+        return jsonify({"error": "Contest not found"}), 404
+
+    end_time = contest.start_time + contest.duration
+    contest_ended = end_time < db.func.now()
+
+    user_id = request.user["user_id"]
+    my_submission = submission.user_id == user_id
+
+    if not my_submission and not contest_ended:
+        return jsonify({"error": "You are not allowed to view this submission"}), 403
+    
+    problem_letter = Contest_Problems.query.filter_by(contest_id=submission.contest_id, problem_id=submission.problem_id).first().letter if submission.contest_id else None
+    
+    return jsonify({
+        "id": submission.id,
+        "contest_id": submission.contest_id,
+        "problem_letter": problem_letter,
+        "code": submission.code,
+        "language": submission.language,
+        "status": submission.status,
+        "feedback": submission.feedback,
+        "timestamp": submission.timestamp.isoformat()
+    }), 200
+
 
 
 

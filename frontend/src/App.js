@@ -9,6 +9,7 @@ import ContestStandings from './components/ContestStandings';
 import ContestMySubmissions from './components/ContestMySubmissions';
 import Login from './pages/Login';
 import Register from './pages/Register.js';
+import SubmissionViewer from './pages/SubmissionViewer';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="standings" element={<ContestStandings />} />
           <Route path="mysubmissions" element={<ContestMySubmissions />} />
         </Route>
+        <Route path="/submission/:submissionId" element = {<SubmissionViewer />}/>
       </Routes>
     </BrowserRouter>
   );
