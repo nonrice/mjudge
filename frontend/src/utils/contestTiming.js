@@ -13,12 +13,12 @@ export async function calcOffset() {
     console.log("Server time:", serverTime);
     console.log("Start time:", startTime);
     console.log("End time:", endTime);
-    const time_diff = serverTime - endTime;
+    const time_diff = endTime - serverTime;
 
     console.log("Time difference:", time_diff, "ms");
     console.log("Latency:", latency, "ms");
 
-    const total_offset = time_diff - latency;
+    const total_offset = time_diff + latency;
     console.log("Calculated offset:", total_offset, "ms");
     return total_offset;
 }

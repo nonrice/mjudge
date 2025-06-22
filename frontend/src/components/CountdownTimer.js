@@ -32,10 +32,16 @@ export default function CountdownTimer({ endTimeUTC, offsetPromise }) {
     const seconds = Math.floor((remaining / 1000) % 60);
     const minutes = Math.floor((remaining / 1000 / 60) % 60);
     const hours = Math.floor((remaining / 1000 / 60 / 60));
+    const formatTime = (h, m, s) => {
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    };
+
+    const timeString = formatTime(hours, minutes, seconds);
 
     return (
         <span>
-            {hours}:{minutes}:{seconds}
+            {timeString}
+            <span style={{ color: 'gray' }}> (Offset: {offset} ms)</span>
         </span>
     );
 }
