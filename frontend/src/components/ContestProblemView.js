@@ -4,6 +4,13 @@ import ReactMarkdown from 'react-markdown';
 import "katex/dist/katex.min.css";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import AceEditor from 'react-ace';
+
+import "ace-builds/src-noconflict/mode-javascript"
+import "ace-builds/src-noconflict/theme-tomorrow"
+import "ace-builds/src-noconflict/ext-language_tools"
+import "ace-builds/webpack-resolver"
+
 
 
 import { getToken, getUserFromToken } from '../utils/auth';
@@ -11,6 +18,12 @@ import { getToken, getUserFromToken } from '../utils/auth';
 export default function ContestProblemView() {
     const { contestId } = useParams();
     const { problemLetter } = useParams();
+
+    const [language, setLanguage] = useState('python3');
+
+    const handleLanguageChange = (event) => {
+        setLanguage(event.target.value);
+    };
 
     const [problem, setProblem] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -66,6 +79,7 @@ export default function ContestProblemView() {
         });
     };
 
+
     return (
         <div>
             <h1>{problemLetter}. {problem.title}</h1>
@@ -80,13 +94,22 @@ export default function ContestProblemView() {
             { getUserFromToken() ? (
                 <form onSubmit={handleSubmit}>
                     <label htmlFor="code">Solution:</label><br />
-                    <textarea id="code" name="code" rows="4" cols="50"></textarea><br />
                     <label htmlFor="language">Language:</label><br />
-                    <select id="language" name="language">
-                        <option value="python3">Python</option>
+                    <select id="language" name="language" onChange={handleLanguageChange}>
+                        <option value="python3">Python3</option>
                         <option value="cpp">C++</option>
                         <option value="java">Java</option>
                     </select><br />
+                    <AceEditor
+                        name="code"
+                        mode={language}
+                        theme="tomorrow"
+                        fontSize={14}
+                        width="100%"
+                        height="300px"
+                        placeholder="Write your solution here..."
+                        editorProps={{ $blockScrolling: true }}
+                    />
                     <input type="submit" value="Submit" />
                 </form>
             ) : (
