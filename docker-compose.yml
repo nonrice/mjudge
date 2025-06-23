@@ -13,7 +13,9 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/${POSTGRES_DB}
       - PORT=5001
       - FLASK_ENV=development
+      - FLASK_DEBUG=1
       - CHOKIDAR_USEPOLLING=true
+      - PYTHONUNBUFFERED=1
 
   grader:
     build: ./grader
