@@ -8,7 +8,7 @@ export default function ContestStandings() {
   const { contestId } = useParams();
   const { data, error, isLoading } = useSWR(
     [`http://127.0.0.1:5001/api/contest/${contestId}/leaderboard`, {}],
-    ([url, options]) => fetcher(url, options)
+    fetcher
   )
 
   if (isLoading) return <p>Loading standings...</p>;
