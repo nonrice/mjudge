@@ -12,7 +12,7 @@ export default function SubmissionViewer() {
 
     const token = getToken();
     const { data, error } = useSWR(
-        [`http://127.0.0.1:5001/api/submissions/${submissionId}`, { token }],
+        [`http://127.0.0.1:5001/api/submission/${submissionId}`, { token }],
         fetcher
     );
 
@@ -40,16 +40,18 @@ return jsonify({
 
     return (
         <div>
-            <h2>Submission Details</h2>
-            <p><strong>ID:</strong> {id}</p>
+            <Header />
+            <Navbar />
+            <h1>Submission #{id}</h1>
+            <p><strong>Timestamp:</strong> {new Date(timestamp).toLocaleString()}</p>
+            <p><strong>Status:</strong> {status}</p>
             <p><strong>Contest ID:</strong> {contest_id}</p>
             <p><strong>Problem Letter:</strong> {problem_letter}</p>
+            <p><strong>Language:</strong> {language}</p>
             <p><strong>Code:</strong></p>
             <pre>{code}</pre>
-            <p><strong>Language:</strong> {language}</p>
-            <p><strong>Status:</strong> {status}</p>
-            <p><strong>Feedback:</strong> {feedback}</p>
-            <p><strong>Timestamp:</strong> {new Date(timestamp).toLocaleString()}</p>
+            <p><strong>Feedback:</strong></p>
+            <pre>{feedback}</pre>
         </div>
     );
 }
