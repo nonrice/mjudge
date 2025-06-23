@@ -6,7 +6,9 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import AceEditor from 'react-ace';
 
-import "ace-builds/src-noconflict/mode-javascript"
+import "ace-builds/src-noconflict/mode-python"
+import "ace-builds/src-noconflict/mode-c_cpp"
+import "ace-builds/src-noconflict/mode-java"
 import "ace-builds/src-noconflict/theme-tomorrow"
 import "ace-builds/src-noconflict/ext-language_tools"
 import "ace-builds/webpack-resolver"
@@ -19,10 +21,16 @@ export default function ContestProblemView() {
     const { contestId } = useParams();
     const { problemLetter } = useParams();
 
-    const [language, setLanguage] = useState('python3');
+    const [language, setLanguage] = useState('python');
 
     const handleLanguageChange = (event) => {
-        setLanguage(event.target.value);
+        if (event.target.value === 'python3') {
+            setLanguage('python');
+        } else if (event.target.value === 'cpp') {
+            setLanguage('c_cpp');
+        } else if (event.target.value === 'java') {
+            setLanguage('java');
+        }
     };
 
     const [problem, setProblem] = useState(null);
@@ -107,7 +115,6 @@ export default function ContestProblemView() {
                         fontSize={14}
                         width="100%"
                         height="300px"
-                        placeholder="Write your solution here..."
                         editorProps={{ $blockScrolling: true }}
                     />
                     <input type="submit" value="Submit" />
