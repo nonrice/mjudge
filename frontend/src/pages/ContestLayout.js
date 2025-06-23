@@ -32,7 +32,7 @@ export default function ContestLayout() {
     }, [contestId]);
 
     
-    const { data: timingData, error: timingError } = useSWR(`http://127.0.0.1:5001/api/contest/${contestId}/timing`, fetcher);
+    const { data: timingData, error: timingError } = useSWR([`http://127.0.0.1:5001/api/contest/${contestId}/timing`, {}], fetcher);
     const offset = calcOffset();
 
     return (
