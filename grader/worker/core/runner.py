@@ -38,8 +38,10 @@ def run_submission(user_sol_path, user_sol_lang, model_sol_path, model_sol_lang,
             f.write(user_stdout)
         with open("model_output.txt", "w") as f:
             f.write(model_stdout)
+        with open(f"testcase_{number}.txt", "w") as f:
+            f.write(testcase)
         
-        checker_return_code, checker_stdout, checker_stderr = checker_program.execute(None, args=["user_output.txt", "model_output.txt"])
+        checker_return_code, checker_stdout, checker_stderr = checker_program.execute(None, args=["user_output.txt", "model_output.txt", f"testcase_{number}.txt"])
         if checker_return_code != 0:
             return "Wrong Answer", f"Checker failed on test {number}/{total_tests} with return code {checker_return_code}.\nStandard Output: {checker_stdout}\nStandard Error: {checker_stderr}"
 
