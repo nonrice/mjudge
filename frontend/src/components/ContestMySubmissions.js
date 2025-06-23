@@ -37,18 +37,22 @@ export default function ContestMySubmissions() {
       <thead>
         <tr>
           <th>ID</th>
-          <th>Problem ID</th>
+          <th>Letter</th>
           <th>Language</th>
           <th>Status</th>
+          <th>Detail</th>
         </tr>
       </thead>
       <tbody>
         {submissions.map(submission => (
           <tr key={submission.id}>
             <td>{submission.id}</td>
-            <td>{submission.problem_id}</td>
+            <td>{submission.letter}</td>
             <td>{submission.language}</td>
             <td>{submission.status}</td>
+            <td>
+              <a href={`/submission/${submission.id}`} target="_blank" rel="noopener noreferrer">View</a>
+            </td>
           </tr>
         ))}
       </tbody>

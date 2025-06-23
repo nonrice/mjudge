@@ -3,6 +3,7 @@ from app import db
 from app.utils.decorators import jwt_required
 from app.models import Submissions, Users, Contests, Problems, Contest_Problems, Testcases
 import requests
+from datetime import datetime
 
 submissions_bp = Blueprint("submissions", __name__)
 
@@ -49,15 +50,16 @@ def submit_code():
 def get_user_submissions(contest_id):
     user_id = request.user["user_id"]
     submissions = Submissions.query.filter_by(user_id=user_id, contest_id=contest_id).all()
+    letters = [ Contest_Problems.query.filter_by(contest_id=contest_id, problem_id=sub.problem_id).first().letter for sub in submissions ]
     
     return jsonify([{
         "id": submission.id,
-        "problem_id": submission.problem_id,
+        "letter": letter,
         "code": submission.code,
         "language": submission.language,
         "status": submission.status,
         "feedback": submission.feedback
-    } for submission in submissions]), 200
+    } for submission, letter in zip(submissions, letters)]), 200
 
 @submissions_bp.route("/submission/<int:submission_id>", methods=["GET"])
 @jwt_required
@@ -70,8 +72,11 @@ def get_submission(submission_id):
     if not contest:
         return jsonify({"error": "Contest not found"}), 404
 
-    end_time = contest.start_time + contest.duration
-    contest_ended = end_time < db.func.now()
+    end_time = contest.start_time + contest.duration 
+    current_time = datetime.utcnow()  # Use UTC time for comparison
+    print(current_time)
+    print(end_time)
+    contest_ended = end_time < current_time
 
     user_id = request.user["user_id"]
     my_submission = submission.user_id == user_id
