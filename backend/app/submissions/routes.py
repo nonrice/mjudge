@@ -52,14 +52,14 @@ def get_user_submissions(contest_id):
     submissions = Submissions.query.filter_by(user_id=user_id, contest_id=contest_id).all()
     letters = [ Contest_Problems.query.filter_by(contest_id=contest_id, problem_id=sub.problem_id).first().letter for sub in submissions ]
     
-    return jsonify([{
+    return jsonify(sorted([{
         "id": submission.id,
         "letter": letter,
         "code": submission.code,
         "language": submission.language,
         "status": submission.status,
         "feedback": submission.feedback
-    } for submission, letter in zip(submissions, letters)]), 200
+    } for submission, letter in zip(submissions, letters)], key=lambda x: x["id"], reverse=True)), 200
 
 @submissions_bp.route("/submission/<int:submission_id>", methods=["GET"])
 @jwt_required
@@ -93,7 +93,7 @@ def get_submission(submission_id):
         "code": submission.code,
         "language": submission.language,
         "status": submission.status,
-        "feedback": submission.feedback,
+        "feedback": submission.feedback if contest_ended else "Feedback is hidden for this testcase.",
         "timestamp": submission.timestamp.isoformat()
     }), 200
 

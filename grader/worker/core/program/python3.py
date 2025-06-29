@@ -1,18 +1,21 @@
 import core.program.program_base
+from core.util.limited_subprocess import limited_subprocess
+from core.util.execution_result import ExecutionResult
 
 class Python3Program(core.program.program_base.ProgramBase):
-    """
-    Python 3 program type.
-    Provides methods for compiling and executing C++ programs.
-    """
-
     def compile(self):
-        return 0, "", ""
+        return ExecutionResult(
+            return_code=0,
+            stdout="",
+            stderr="",
+            time=0,
+            memory=0,
+            failure=None
+        )
 
-    def execute(self, stdin: str, args: list[str] = None):
-        import subprocess
+    def execute(self, stdin: str, args: list[str] = None, time_limit: int = 2, memory_limit: int = 256):
         execute_command = ["python3", self.source_path]
         if args is not None:
             execute_command.extend(args)
-        result = subprocess.run(execute_command, input=stdin, text=True, capture_output=True)
-        return result.returncode, result.stdout, result.stderr
+        print("Executing command:", execute_command)
+        return limited_subprocess(execute_command, stdin=stdin, time_limit=time_limit, memory_limit=memory_limit)

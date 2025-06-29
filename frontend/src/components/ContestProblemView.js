@@ -36,6 +36,7 @@ export default function ContestProblemView() {
     const [problem, setProblem] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [code, setCode] = useState("");
     useEffect(() => {
         fetch(`http://127.0.0.1:5001/api/contest/${contestId}/problem/${problemLetter}`).then(res => {
             if (!res.ok) {
@@ -54,11 +55,12 @@ export default function ContestProblemView() {
     if (loading) return <p>Loading problem...</p>;
     if (error) return <p>Error loading problem: {error}</p>;
 
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
         const solutionData = {
-            code: formData.get('code'),
+            code: code, 
             language: formData.get('language'),
             problem_letter: problemLetter,
             contest_id: contestId,
@@ -116,6 +118,8 @@ export default function ContestProblemView() {
                         width="100%"
                         height="300px"
                         editorProps={{ $blockScrolling: true }}
+                        onChange={(newCode) => setCode(newCode)}
+                        value={code}
                     />
                     <input type="submit" value="Submit" />
                 </form>

@@ -20,13 +20,25 @@ export default function ContestStandings() {
   return (
     <div>
       <h2>Standings</h2>
-      <table>
+      <table style={{tableLayout: "fixed", width: "100%"}}>
+        <colgroup>
+          {/* First 4 columns: auto-fit content using minimal width */}
+          <col />
+          <col />
+          <col />
+          <col />
+
+          {/* Remaining columns: take equal share of remaining width */}
+          {Array.from({ length: sorted_legend.length }).map((_, i) => (
+            <col key={i} style={{ width: `${70/ sorted_legend.length }%` }} />
+          ))}
+        </colgroup>
         <thead>
           <tr>
-            <th>Rank</th>
+            <th style={{whiteSpace: "nowrap"}}>#</th>
             <th>User</th>
-            <th>Solved</th>
-            <th>Score</th>
+            <th>=</th>
+            <th>*</th>
             {sorted_legend.map((problem, index) => (
             <th key={index}>{problem}</th>
             ))}
@@ -40,8 +52,15 @@ export default function ContestStandings() {
               <td>{entry.solved.reduce((acc, curr) => acc + curr, 0)}</td>
               <td>{entry.score}</td>
               {sorted_legend.map((problem, problemIndex) => (
-                <td key={problemIndex}>
-                  {entry.attempts[problemIndex]}/{entry.solved[problemIndex] ? entry.times[problemIndex] : "--"}
+                <td
+                  key={problemIndex}
+                  className={entry.solved[problemIndex] ? 'accepted' : ''}
+                >
+                  {entry.attempts[problemIndex] > 0 ? (
+                    `${entry.attempts[problemIndex]}/${entry.solved[problemIndex] ? entry.times[problemIndex] : "--"}`
+                  ) : (
+                    ""
+                  )}
                 </td>
               ))}
             </tr>

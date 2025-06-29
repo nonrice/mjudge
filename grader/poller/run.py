@@ -51,7 +51,7 @@ def spawn_worker(submission_id):
             "mclean-judge-worker",  # Change to the actual image name you use for your worker
             command=[str(submission_id)],
             detach=True,
-            network="mclean-judge_default",  # Match the docker-compose network if needed
+            network="mclean-judge_default"  # Match the docker-compose network if needed
         )
     except docker.errors.DockerException as e:
         print("Docker error:", e)

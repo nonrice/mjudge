@@ -3,6 +3,7 @@ import core.runner
 
 from sqlalchemy import create_engine, MetaData, Table
 from sqlalchemy import select, update
+import os
 
 def main(*args, **kwargs):
     if len(sys.argv) < 2:
@@ -87,6 +88,11 @@ def main(*args, **kwargs):
         )
         conn.execute(update_query)
         conn.commit()
+    def print_filesystem():
+        for item in os.listdir('.'):
+            print(item)
+
+    print_filesystem()
 
 
 if __name__ == "__main__":

@@ -5,19 +5,22 @@ export default function CountdownTimer({ endTimeUTC, offsetPromise }) {
     const [offset, setOffset] = useState(0);
 
     useEffect(() => {
+        let interval;
+    
         offsetPromise.then(resolvedOffset => {
             setOffset(resolvedOffset);
-
-            const interval = setInterval(() => {
+    
+            // ✅ Immediately compute remaining time on first run
+            const update = () => {
                 const now = Date.now() + resolvedOffset;
-
-                console.log("Current time (now):", now, "Offset:", resolvedOffset, "End time:", endTimeUTC.getTime());
-
                 setRemaining(Math.max(0, Math.floor(endTimeUTC.getTime() - now)));
-            }, 1000);
-
-            return () => clearInterval(interval);
+            };
+    
+            update(); // Call once right away
+            interval = setInterval(update, 1000);
         });
+    
+        return () => clearInterval(interval);
     }, [endTimeUTC, offsetPromise]);
 
 

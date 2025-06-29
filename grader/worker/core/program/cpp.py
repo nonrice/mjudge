@@ -1,5 +1,7 @@
 import core.program.program_base
-
+from core.util.limited_subprocess import limited_subprocess
+import subprocess
+import os
 class CppProgram(core.program.program_base.ProgramBase):
     """
     C++ program type.
@@ -7,15 +9,12 @@ class CppProgram(core.program.program_base.ProgramBase):
     """
 
     def compile(self):
-        import subprocess
-        compile_command = ["g++", self.source_path, "-o", self.source_filename.replace('.cpp', '')]
-        result = subprocess.run(compile_command, capture_output=True, text=True)
-        return result.returncode, result.stdout, result.stderr
+        self.exec_path = os.path.splitext(self.source_path)[0]
+        compile_command = ["g++", "-std=c++17", self.source_path, "-o", self.exec_path]
+        return limited_subprocess(compile_command, stdin=None, time_limit=20, memory_limit=1024)
 
-    def execute(self, stdin: str, args: list[str] = None):
-        import subprocess
-        execute_command = [self.source_filename.replace('.cpp', '')]
+    def execute(self, stdin: str, args: list[str] = None, time_limit: int = 2, memory_limit: int = 256):
+        execute_command = [self.exec_path]
         if args is not None:
             execute_command.extend(args)
-        result = subprocess.run(execute_command, input=stdin, text=True, capture_output=True)
-        return result.returncode, result.stdout, result.stderr
+        return limited_subprocess(execute_command, stdin=stdin, time_limit=time_limit, memory_limit=memory_limit)

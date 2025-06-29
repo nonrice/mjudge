@@ -13,17 +13,18 @@ def contest_list():
     return jsonify([{
         "id": c.id,
         "title": c.title,
-        "start_time": c.start_time.isoformat()
-    } for c in contests])
+        "start_time": c.start_time.astimezone(timezone.utc).isoformat(),
+        "duration": c.duration.total_seconds() // 60
+    } for c in sorted(contests, key=lambda c: c.start_time, reverse=True)])
 
 @contests_bp.route("/contest/<int:contest_id>/problems", methods=["GET"])
 def get_problems(contest_id):
     problems = Contest_Problems.query.filter_by(contest_id=contest_id).all()
-    return jsonify([{
+    return jsonify(sorted([{
         "id": p.id,
         "letter": p.letter,
         "title": Problems.query.get(p.problem_id).title,
-    } for p in problems])
+    } for p in problems], key=lambda x: x['letter']))
 
 @contests_bp.route("/contest/<int:contest_id>/title", methods=["GET"])
 def get_contest_title(contest_id):
