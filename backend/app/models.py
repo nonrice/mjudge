@@ -26,6 +26,7 @@ class Testcases(db.Model):
     number = db.Column(db.Integer, nullable=False)
     data = db.Column(db.Text, nullable=False)
     problem = db.relationship("Problems", backref=db.backref("testcases", lazy=True))
+    sample = db.Column(db.Boolean, default=False, nullable=False)
 
 class Contest_Problems(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -45,6 +46,7 @@ class Submissions(db.Model):
     status = db.Column(db.String(50), nullable=False)  # Submission status (e.g., "Wrong answer")
     feedback = db.Column(db.Text, nullable=True)  # Feedback (e.g., compilation errors)
     timestamp = db.Column(db.DateTime, nullable=False, default=db.func.now())  # Submission time
+    in_contest_feedback = db.Column(db.Boolean, default=True, nullable=False)  # Whether feedback is for in-contest use    
 
     # Relationships
     problem = db.relationship("Problems", backref=db.backref("submissions", lazy=True))

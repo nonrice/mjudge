@@ -8,7 +8,6 @@ class ProgramBase:
 
     def __init__(self, source_path: os.PathLike):
         self.source_path = source_path
-        self.source_filename = os.path.basename(source_path)
 
     def compile(self):
         """

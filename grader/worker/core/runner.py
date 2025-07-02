@@ -28,12 +28,13 @@ def run_submission(user_sol_path, user_sol_lang, model_sol_path, model_sol_lang,
     checker_program.compile()
 
     total_tests = len(testcases)
-    for (number, testcase) in enumerate(testcases, start=1):
+    for (number, tc) in enumerate(testcases, start=1):
+        testcase, sample = tc
         user_result = user_program.execute(testcase)
         model_result = model_program.execute(testcase)
         
         if user_result.failure:
-            return user_result.failure, f"Submission failed on test {number}/{total_tests} with return code {user_result.return_code}.\nStandard Output: {user_result.stdout}\nStandard Error: {user_result.stderr}"
+            return user_result.failure, f"Submission failed on test {number}/{total_tests} with return code {user_result.return_code}.\nStandard Output: {user_result.stdout}\nStandard Error: {user_result.stderr}", sample
 
         with open("user_output.txt", "w") as f:
             f.write(user_result.stdout)
@@ -44,6 +45,6 @@ def run_submission(user_sol_path, user_sol_lang, model_sol_path, model_sol_lang,
         
         checker_result = checker_program.execute(None, args=["user_output.txt", "model_output.txt", f"testcase_{number}.txt"])
         if checker_result.failure:
-            return "Wrong Answer", f"Checker failed on test {number}/{total_tests} with return code {checker_result.return_code}.\nStandard Output: {checker_result.stdout}\nStandard Error: {checker_result.stderr}"
+            return "Wrong Answer", f"Checker failed on test {number}/{total_tests} with return code {checker_result.return_code}.\nStandard Output: {checker_result.stdout}\nStandard Error: {checker_result.stderr}", sample
 
-    return "Accepted", f"{total_tests}/{total_tests} tests passed successfully." 
+    return "Accepted", f"{total_tests}/{total_tests} tests passed successfully.", True

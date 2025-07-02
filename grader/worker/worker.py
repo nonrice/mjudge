@@ -69,8 +69,8 @@ def main(*args, **kwargs):
         with open(checker_path, "w") as f:
             f.write(checker_code)
 
-        testcases_list = [ tc.data for tc in sorted(testcases_result, key=lambda x: x.number) ]
-        status, feedback = core.runner.run_submission(
+        testcases_list = [ (tc.data, tc.sample) for tc in sorted(testcases_result, key=lambda x: x.number) ]
+        status, feedback, in_contest_feedback = core.runner.run_submission(
             user_sol_path,
             user_lang,
             model_sol_path,
@@ -85,14 +85,10 @@ def main(*args, **kwargs):
             .where(submissions.c.id == submission_id)
             .values(status=status)
             .values(feedback=feedback)
+            .values(in_contest_feedback=in_contest_feedback)
         )
         conn.execute(update_query)
         conn.commit()
-    def print_filesystem():
-        for item in os.listdir('.'):
-            print(item)
-
-    print_filesystem()
 
 
 if __name__ == "__main__":

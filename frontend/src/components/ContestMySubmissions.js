@@ -2,33 +2,57 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getToken } from '../utils/auth.js'; // Adjust the import path as necessary
 
+import { fetcher } from '../utils/fetcher.js'; // Adjust the import path as necessary
+import useSWR from 'swr';
+
 
 export default function ContestMySubmissions() {
   const { contestId } = useParams();
 
-  const [submissions, setSubmissions] = useState([]);
+  // const [submissions, setSubmissions] = useState([]);
 
-  useEffect(() => {
-    const fetchSubmissions = async () => {
-      const token = getToken();
-      const response = await fetch(`http://127.0.0.1:5001/api/submissions/${contestId}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
+  // useEffect(() => {
+  //   const fetchSubmissions = async () => {
+  //     const token = getToken();
+  //     const response = await fetch(`http://127.0.0.1:5001/api/submissions/${contestId}`, {
+  //       method: 'GET',
+  //       headers: {
+  //         'Authorization': `Bearer ${token}`,
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
 
-      if (response.ok) {
-        const data = await response.json();
-        setSubmissions(data);
-      } else {
-        console.error('Failed to fetch submissions');
-      }
-    };
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       setSubmissions(data);
+  //     } else {
+  //       console.error('Failed to fetch submissions');
+  //     }
+  //   };
 
-    fetchSubmissions();
-  }, [contestId]);
+  //   fetchSubmissions();
+  // }, [contestId]);
+
+  const token = getToken();
+  const { data, error } = useSWR(
+    [`http://127.0.0.1:5001/api/submissions/${contestId}`, { token }],
+    fetcher,
+    {
+      refreshInterval: 3000,
+      refreshWhenHidden: false
+    }
+  );
+
+  if (error) {
+    return <div>Error loading submissions: {error.message}</div>;
+  }
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
+
+  const submissions = data;
+
 
   return (
     <div>
@@ -49,7 +73,17 @@ export default function ContestMySubmissions() {
             <td>{submission.id}</td>
             <td>{submission.letter}</td>
             <td>{submission.language}</td>
-            <td>{submission.status}</td>
+            {
+              (submission.status === "Accepted") ?
+                <td className="accepted">{submission.status}</td>
+              : (
+                (submission.status === "Waiting" || submission.status === "Running") ? 
+                  <td style={{color: "gray"}}>{submission.status}</td>
+                : (
+                  <td>{submission.status}</td>
+                )
+              )
+            }
             <td>
               <a href={`/submission/${submission.id}`} target="_blank" rel="noopener noreferrer">View</a>
             </td>

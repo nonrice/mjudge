@@ -36,7 +36,7 @@ export default function Contests() {
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>#</th>
                         <th>Name</th>
                         <th>Start</th>
                         <th>Duration</th>

@@ -5,6 +5,8 @@ import "katex/dist/katex.min.css";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import AceEditor from 'react-ace';
+import { fetcher } from '../utils/fetcher';
+import { useSWR } from 'swr';
 
 import "ace-builds/src-noconflict/mode-python"
 import "ace-builds/src-noconflict/mode-c_cpp"
@@ -81,11 +83,14 @@ export default function ContestProblemView() {
             return res.json();
         })
         .then(data => {
-            alert('Solution submitted successfully! Submission ID: ' + data.submission_id);
+            window.location.href = `/contest/${contestId}/mysubmissions`;
+            //alert('Solution submitted successfully! Submission ID: ' + data.submission_id);
+            //setSubmitMsg("Solution submitted successfully!");
             // Handle successful submission (e.g., redirect or update UI)
         })
         .catch(err => {
             alert('Error submitting solution: ' + err.message);
+            //setSubmitMsg("Error submitting solution: " + err.message);
         });
     };
 
@@ -103,13 +108,13 @@ export default function ContestProblemView() {
 
             { getUserFromToken() ? (
                 <form onSubmit={handleSubmit}>
-                    <label htmlFor="code">Solution:</label><br />
                     <label htmlFor="language">Language:</label><br />
                     <select id="language" name="language" onChange={handleLanguageChange}>
                         <option value="python3">Python3</option>
                         <option value="cpp">C++</option>
                         <option value="java">Java</option>
                     </select><br />
+                    <label htmlFor="code">Solution:</label><br />
                     <AceEditor
                         name="code"
                         mode={language}
@@ -121,6 +126,7 @@ export default function ContestProblemView() {
                         onChange={(newCode) => setCode(newCode)}
                         value={code}
                     />
+                    <br />
                     <input type="submit" value="Submit" />
                 </form>
             ) : (

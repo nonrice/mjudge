@@ -8,7 +8,11 @@ export default function ContestStandings() {
   const { contestId } = useParams();
   const { data, error, isLoading } = useSWR(
     [`http://127.0.0.1:5001/api/contest/${contestId}/leaderboard`, {}],
-    fetcher
+    fetcher,
+    {
+      refreshInterval: 3000,
+      refreshWhenHidden: false
+    }
   )
 
   if (isLoading) return <p>Loading standings...</p>;
@@ -20,25 +24,22 @@ export default function ContestStandings() {
   return (
     <div>
       <h2>Standings</h2>
-      <table style={{tableLayout: "fixed", width: "100%"}}>
+      <table style={{tableLayout: "fixed"}}>
         <colgroup>
-          {/* First 4 columns: auto-fit content using minimal width */}
+          <col style={{ width: '4em' }} />
           <col />
-          <col />
-          <col />
-          <col />
-
-          {/* Remaining columns: take equal share of remaining width */}
-          {Array.from({ length: sorted_legend.length }).map((_, i) => (
-            <col key={i} style={{ width: `${70/ sorted_legend.length }%` }} />
+          <col style={{ width: '5em' }} />
+          <col style={{ width: '5em' }} />
+          {sorted_legend.map((_, index) => (
+            <col style={{ width: '5em'}} />
           ))}
         </colgroup>
         <thead>
           <tr>
-            <th style={{whiteSpace: "nowrap"}}>#</th>
+            <th>#</th>
             <th>User</th>
-            <th>=</th>
-            <th>*</th>
+            <th>Solves</th>
+            <th>Score</th>
             {sorted_legend.map((problem, index) => (
             <th key={index}>{problem}</th>
             ))}

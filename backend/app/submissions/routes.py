@@ -3,7 +3,7 @@ from app import db
 from app.utils.decorators import jwt_required
 from app.models import Submissions, Users, Contests, Problems, Contest_Problems, Testcases
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
 
 submissions_bp = Blueprint("submissions", __name__)
 
@@ -85,16 +85,18 @@ def get_submission(submission_id):
         return jsonify({"error": "You are not allowed to view this submission"}), 403
     
     problem_letter = Contest_Problems.query.filter_by(contest_id=submission.contest_id, problem_id=submission.problem_id).first().letter if submission.contest_id else None
+    problem_name = Problems.query.get(submission.problem_id).title if submission.problem_id else None
     
     return jsonify({
         "id": submission.id,
         "contest_id": submission.contest_id,
         "problem_letter": problem_letter,
+        "problem_name": problem_name,
         "code": submission.code,
         "language": submission.language,
         "status": submission.status,
-        "feedback": submission.feedback if contest_ended else "Feedback is hidden for this testcase.",
-        "timestamp": submission.timestamp.isoformat()
+        "feedback": submission.feedback if (contest_ended or submission.in_contest_feedback and not contest_ended) else "Feedback is hidden for this testcase.",
+        "timestamp": submission.timestamp.astimezone(timezone.utc).isoformat()
     }), 200
 
 
