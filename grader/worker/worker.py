@@ -69,6 +69,9 @@ def main(*args, **kwargs):
         with open(checker_path, "w") as f:
             f.write(checker_code)
 
+        time_limit = problem_result.time_limit/1000
+        memory_limit = problem_result.memory_limit
+
         testcases_list = [ (tc.data, tc.sample) for tc in sorted(testcases_result, key=lambda x: x.number) ]
         status, feedback, in_contest_feedback, max_time, max_memory = core.runner.run_submission(
             user_sol_path,
@@ -77,7 +80,9 @@ def main(*args, **kwargs):
             model_lang,
             checker_path,
             checker_lang,
-            testcases_list
+            testcases_list,
+            time_limit=time_limit,
+            memory_limit=memory_limit
         )
         print(status, feedback)
         update_query = (

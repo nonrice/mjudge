@@ -26,6 +26,8 @@ export default function About() {
             <li>C++ (C++17)</li>
             <li>Java (Java 17)</li>
         </ul>
+        <p>Note for Java users: Title your class "Main" (case sensitive).</p>
+
         <p>Your program should only read and print from standard input and output, respectively. Do not try to destabilize the judging system!</p>
 
         <p>After your submission is graded, the status will update. A status of "accepted" means you solved the problem. All other statuses indicate an error.</p>
