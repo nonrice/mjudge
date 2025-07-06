@@ -1,15 +1,20 @@
 FROM python:3.11-slim
 
-# Set working directory
 WORKDIR /app
 
-# Copy your worker code
+RUN apt-get update && apt-get install -y \
+    g++ \
+    openjdk-17-jdk \
+    time \
+ && rm -rf /var/lib/apt/lists/*
+
+# (Optional) Set JAVA_HOME environment variable
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
 COPY . .
 
-# Install any Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-# Install g++
-RUN apt-get update && apt-get install -y g++ && apt-get clean
-
-# The container entrypoint will accept a submission ID
 ENTRYPOINT ["python", "worker.py"]

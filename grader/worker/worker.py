@@ -70,7 +70,7 @@ def main(*args, **kwargs):
             f.write(checker_code)
 
         testcases_list = [ (tc.data, tc.sample) for tc in sorted(testcases_result, key=lambda x: x.number) ]
-        status, feedback, in_contest_feedback = core.runner.run_submission(
+        status, feedback, in_contest_feedback, max_time, max_memory = core.runner.run_submission(
             user_sol_path,
             user_lang,
             model_sol_path,
@@ -86,6 +86,8 @@ def main(*args, **kwargs):
             .values(status=status)
             .values(feedback=feedback)
             .values(in_contest_feedback=in_contest_feedback)
+            .values(max_time=max_time)
+            .values(max_memory=max_memory)
         )
         conn.execute(update_query)
         conn.commit()

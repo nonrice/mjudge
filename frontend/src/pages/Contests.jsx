@@ -28,6 +28,7 @@ export default function Contests() {
     if (loading) return <p>Loading contests...</p>;
     if (error) return <p>Error loading contests: {error}</p>;
 
+
     return (
         <div>
             <Header />
@@ -44,26 +45,34 @@ export default function Contests() {
                     </tr>
                 </thead>
                 <tbody>
-                    {contests.map(contest => (
-                        <tr key={contest.id}>
+                    {contests.map((contest) => { 
+                        const startTime = new Date(contest.start_time);
+                        const endTime = new Date(startTime.getTime() + contest.duration * 60000);
+                        const now = new Date();
+
+                        console.log(`Contest ID: ${contest.id}, Start Time: ${startTime}, End Time: ${endTime}, Now: ${now}`);
+
+                        return <tr key={contest.id}>
                             <td>{contest.id}</td>
                             <td>
                                 {contest.title}
 
                                 {contest.isInProgress && <span>(in progress)</span>}
                                 {(() => {
-                                    const startTime = new Date(contest.start_time);
-                                    const endTime = new Date(startTime.getTime() + contest.duration * 60000);
-                                    const now = new Date();
                                     return now >= startTime && now <= endTime ? <span> (in progress)</span> : null;
                                 })()}
                                
                             </td>
                             <td>{new Date(contest.start_time).toLocaleString()}</td>
                             <td>{contest.duration} minutes</td>
-                            <td><a href={`/contest/${contest.id}/problems`}>Enter</a></td>
+                            <td>
+                                {
+                                    (now > startTime) && 
+                                    <a href={`/contest/${contest.id}/problems`}>Enter</a>
+                                }
+                            </td>
                         </tr>
-                    ))}
+                    })}
                 </tbody>
             </table>
         </div>

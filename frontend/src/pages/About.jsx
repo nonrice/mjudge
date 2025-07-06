@@ -14,21 +14,21 @@ export default function About() {
 
         <p>Some school clubs I know developed their own online judges. However, to my knowledge, they are often very proprietary, or are not designed for frequent practice contests. My goal for McLean Judge (as it is called now, I may change its name later) is to solve both of these problems&mdash;to make a lightweight and easy-to-use platform which can be set up without trouble, endure frequent usage, and streamline problemsetting.</p>
 
-        <p>You may find the Github repository <a href="https://github.com/nonrice/mjudge">here</a>. The deployment right now is only a working demo.</p>
-
         <h2>How to Use</h2>
-        <p>First, <a href="/register">register</a> for an account. Then go to <a href="/contests">contests</a> and enter a contest. Click on problems to view their statements, and submit your code at the bottom of the problem page. It's advised to write code and test it on your own local editor, and just paste it into the website to submit. Upon submission you'll be directed to a list displaying all your submissions for the contest. There, you can observe the status and details of your submission. Submissions statuses are explained below.</p>
+        <p>First, register for an account. Then go to the contests tab. Click on problems to view their statements, and submit your code at the bottom of the problem page. It's advised to write code and test it on your own local editor, and just paste it into the website to submit. Upon submission you'll be directed to a list displaying all your submissions for the contest. There, you can observe the status and details of your submission.</p>
+
+        <p>The contest leaderboards are arranged following the <a href="https://www.csc.kth.se/contest/nwerc/2006/results/scoring.html">ACM-ICPC scoring system</a>.</p>
 
         <h2>Judging Details</h2>
         <p>Three languages are supported at the moment:</p>
         <ul>
-            <li>Python 3:</li>
-            <li>C++: The supported language version is C++17. The <code>O2</code> flag is enabled for speedup.</li>
-            <li>Java</li>
+            <li>Python 3 (Python 3.11)</li>
+            <li>C++ (C++17)</li>
+            <li>Java (Java 17)</li>
         </ul>
         <p>Your program should only read and print from standard input and output, respectively. Do not try to destabilize the judging system!</p>
 
-        <p>After your submission is graded, the status will update. A status of <span class="accepted">Accepted</span> means you solved the problem. All other statuses indicate an error.</p>
+        <p>After your submission is graded, the status will update. A status of "accepted" means you solved the problem. All other statuses indicate an error.</p>
         <ul>
             <li>Wrong Answer: Your program printed the wrong answer for a testcase.</li>
             <li>Time Limit Exceeded: Your program took too long to run. Think of a more efficient solution.</li>
@@ -36,8 +36,6 @@ export default function About() {
             <li>Runtime Error: Your program crashed during execution. This could be due to an out-of-bounds access, division by zero, or other runtime errors.</li>
             <li>Compilation Error: Your program failed to compile.</li>
         </ul>
-
-        <p>The leaderboard is arranged following the <a href="https://www.csc.kth.se/contest/nwerc/2006/results/scoring.html">ACM-ICPC scoring system</a>.</p>
         </div>
     );
 }

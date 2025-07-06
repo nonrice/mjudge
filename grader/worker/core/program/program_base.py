@@ -1,4 +1,5 @@
 import os
+from core.util.execution_result import ExecutionResult
 
 class ProgramBase:
     """
@@ -9,14 +10,14 @@ class ProgramBase:
     def __init__(self, source_path: os.PathLike):
         self.source_path = source_path
 
-    def compile(self):
+    def compile(self)->ExecutionResult:
         """
         Execute the program with the given arguments.
         This method should be implemented by subclasses.
         """
         raise NotImplementedError("Subclasses must implement this method.")
     
-    def execute(self, stdin: str, args: list[str] = None):
+    def execute(self, stdin: str, args: list[str] = None)->ExecutionResult:
         """
         Execute the program with the given arguments.
         This method should be implemented by subclasses.

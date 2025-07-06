@@ -12,6 +12,9 @@ def register():
     data = request.get_json()
     if Users.query.filter_by(username=data["username"]).first():
         return jsonify({"error": "Users already exists"}), 400
+    
+    if len(data["username"]) < 4 or len(data["username"]) > 20 or not all(c.isalnum() or c in ['_', '.'] for c in data["username"]):
+        return jsonify({"error": "Username must be between 5 and 20 characters and contain only alphanumeric characters, underscores, and periods"}), 400
 
     hashed_pw = generate_password_hash(data["password"])
     new_user = Users(username=data["username"], password_hash=hashed_pw)
@@ -29,7 +32,7 @@ def login():
     token = jwt.encode({
         "user_id": user.id,
         "username": user.username,
-        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+        "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=24)
     }, current_app.config["SECRET_KEY"], algorithm="HS256")
 
     return jsonify({"token": token})

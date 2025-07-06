@@ -96,7 +96,9 @@ def get_submission(submission_id):
         "language": submission.language,
         "status": submission.status,
         "feedback": submission.feedback if (contest_ended or submission.in_contest_feedback and not contest_ended) else "Feedback is hidden for this testcase.",
-        "timestamp": submission.timestamp.astimezone(timezone.utc).isoformat()
+        "timestamp": submission.timestamp.astimezone(timezone.utc).isoformat(),
+        "max_time": submission.max_time,
+        "max_memory": submission.max_memory
     }), 200
 
 

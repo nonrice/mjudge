@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
-export default function CountdownTimer({ endTimeUTC, offsetPromise }) {
+export default function CountdownTimer({ timingData, offsetPromise }) {
+    const endTimeUTC = new Date(timingData.end_time);
     const [remaining, setRemaining] = useState(-1);
     const [offset, setOffset] = useState(0);
 

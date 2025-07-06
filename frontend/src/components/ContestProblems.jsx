@@ -33,7 +33,7 @@ export default function ContestProblems() {
           <tr>
             <th>#</th>
             <th>Title</th>
-            <th>Actions</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>

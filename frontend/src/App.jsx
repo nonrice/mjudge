@@ -8,11 +8,12 @@ import ContestProblemView from './components/ContestProblemView';
 import ContestStandings from './components/ContestStandings';
 import ContestMySubmissions from './components/ContestMySubmissions';
 import Login from './pages/Login';
-import Register from './pages/Register.js';
+import Register from './pages/Register';
 import SubmissionViewer from './pages/SubmissionViewer';
 
 function App() {
   return (
+    <div className="App">
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -30,6 +31,7 @@ function App() {
         <Route path="/submission/:submissionId" element = {<SubmissionViewer />}/>
       </Routes>
     </BrowserRouter>
+    </div>
   );
 }
 

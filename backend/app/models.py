@@ -19,6 +19,8 @@ class Problems(db.Model):
     solution_lang = db.Column(db.String(50), nullable=True)
     checker = db.Column(db.Text, nullable=True)
     checker_lang = db.Column(db.String(50), nullable=True)
+    time_limit = db.Column(db.Integer, nullable=False)  # Time limit in milliseconds
+    memory_limit = db.Column(db.Integer, nullable=False)  # Memory limit in megabytes
 
 class Testcases(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -47,6 +49,8 @@ class Submissions(db.Model):
     feedback = db.Column(db.Text, nullable=True)  # Feedback (e.g., compilation errors)
     timestamp = db.Column(db.DateTime, nullable=False, default=db.func.now())  # Submission time
     in_contest_feedback = db.Column(db.Boolean, default=True, nullable=False)  # Whether feedback is for in-contest use    
+    max_time = db.Column(db.Integer, nullable=False, default=0)  # Maximum execution time in milliseconds
+    max_memory = db.Column(db.Integer, nullable=False, default=0)  # Maximum memory usage in bytes
 
     # Relationships
     problem = db.relationship("Problems", backref=db.backref("submissions", lazy=True))

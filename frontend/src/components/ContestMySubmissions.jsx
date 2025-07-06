@@ -1,8 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getToken } from '../utils/auth.js'; // Adjust the import path as necessary
+import { getToken } from '../utils/auth'; // Adjust the import path as necessary
 
-import { fetcher } from '../utils/fetcher.js'; // Adjust the import path as necessary
+import { fetcher } from '../utils/fetcher'; // Adjust the import path as necessary
 import useSWR from 'swr';
 
 
@@ -43,6 +43,9 @@ export default function ContestMySubmissions() {
     }
   );
 
+  if (!token) {
+    return <div>Please log in to view your submissions.</div>;
+  }
   if (error) {
     return <div>Error loading submissions: {error.message}</div>;
   }
@@ -86,6 +89,7 @@ export default function ContestMySubmissions() {
             }
             <td>
               <a href={`/submission/${submission.id}`} target="_blank" rel="noopener noreferrer">View</a>
+              {/* <a href={`/submission/${submission.id}`}>View</a> */}
             </td>
           </tr>
         ))}

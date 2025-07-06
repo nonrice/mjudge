@@ -4,16 +4,16 @@ import ReactMarkdown from 'react-markdown';
 import "katex/dist/katex.min.css";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
-import AceEditor from 'react-ace';
 import { fetcher } from '../utils/fetcher';
-import { useSWR } from 'swr';
+import useSWR from 'swr';
 
+import AceEditor from 'react-ace';
 import "ace-builds/src-noconflict/mode-python"
 import "ace-builds/src-noconflict/mode-c_cpp"
 import "ace-builds/src-noconflict/mode-java"
 import "ace-builds/src-noconflict/theme-tomorrow"
 import "ace-builds/src-noconflict/ext-language_tools"
-import "ace-builds/webpack-resolver"
+import "ace-builds/esm-resolver"; 
 
 
 
@@ -60,6 +60,8 @@ export default function ContestProblemView() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        const submitButton = event.target.querySelector('input[type="submit"]');
+        submitButton.disabled = true;
         const formData = new FormData(event.target);
         const solutionData = {
             code: code, 
@@ -92,6 +94,7 @@ export default function ContestProblemView() {
             alert('Error submitting solution: ' + err.message);
             //setSubmitMsg("Error submitting solution: " + err.message);
         });
+        submitButton.disabled = false;
     };
 
 

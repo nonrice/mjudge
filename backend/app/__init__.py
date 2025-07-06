@@ -17,10 +17,12 @@ def create_app():
     from .auth.routes import auth_bp
     from .contests.routes import contests_bp
     from .submissions.routes import submissions_bp
+    from .admin.routes import admin_bp
 
     app.register_blueprint(auth_bp, url_prefix="/api")
     app.register_blueprint(contests_bp, url_prefix="/api")
     app.register_blueprint(submissions_bp, url_prefix="/api")
+    app.register_blueprint(admin_bp, url_prefix="/api")
 
     with app.app_context():
         from . import models

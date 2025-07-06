@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 # CONFIG
 DATABASE_URL = "postgresql://postgres:postgres@db:5432/judgedb"
 POLL_INTERVAL = 10  # seconds
+MAX_WORKERS = 10  # Maximum number of concurrent worker containers
 
 # Initialize Docker and DB clients
 docker_client = docker.from_env()
@@ -45,6 +46,13 @@ def main():
         time.sleep(POLL_INTERVAL)
 
 def spawn_worker(submission_id):
+    running_workers = [
+        c for c in docker_client.containers.list(filters={"ancestor": "mclean-judge-worker"})
+    ]
+    if len(running_workers) >= MAX_WORKERS:
+        print("Maximum number of workers reached, ignoring launch.")
+        return
+
     print(f"Spawning worker for submission {submission_id}")
     try:
         docker_client.containers.run(

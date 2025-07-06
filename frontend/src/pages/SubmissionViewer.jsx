@@ -40,7 +40,7 @@ return jsonify({
         return <div>Loading...</div>;
     }
 
-    const { id, contest_id, problem_letter, problem_name, code, language, status, feedback, timestamp } = data;
+    const { id, contest_id, problem_letter, problem_name, code, language, status, feedback, timestamp, max_time, max_memory } = data;
 
     return (
         <div>
@@ -50,6 +50,8 @@ return jsonify({
             <p><strong>Submitted to: </strong><a href={`/contest/${contest_id}/problem/${problem_letter}`}>{contest_id}{problem_letter}. {problem_name}</a></p>
             <p><strong>Timestamp:</strong> {new Date(timestamp).toLocaleString()}</p>
             <p className={status === 'Accepted' ? 'accepted' : ''}><strong>Status:</strong> {status}</p>
+            <p><strong>Runtime:</strong> {max_time} ms</p>
+            <p><strong>Memory:</strong> {max_memory} KB</p>
             <p><strong>Language:</strong> {language}</p>
             <p><strong>Code (<a href="#" onClick={() => navigator.clipboard.writeText(code)}>copy</a>):</strong></p>
             <pre>{code}</pre>

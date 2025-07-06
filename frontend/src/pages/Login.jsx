@@ -6,7 +6,9 @@ import Navbar from "../components/Navbar";
 export default function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [message, setMessage] = useState("");
     const navigate = useNavigate();
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -29,7 +31,8 @@ export default function Login() {
             navigate("/"); // Redirect to home page
         })
         .catch((err) => {
-            alert("Login failed. Please check your credentials.");
+            // alert("Login failed. Please check your credentials.");
+            setMessage("Login failed. Please check your credentials.");
             console.error(err);
         });
     };
@@ -51,6 +54,7 @@ export default function Login() {
                     <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 </label>
                 <br />
+                <p>{message}</p>
                 <button type="submit">Login</button>
             </form>
         </div>

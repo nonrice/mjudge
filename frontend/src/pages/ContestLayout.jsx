@@ -43,7 +43,7 @@ export default function ContestLayout() {
         <h1>
             {title}<br></br>
             <code>{timingData && offset !== undefined && (
-                <CountdownTimer endTimeUTC={new Date(timingData.end_time)} offsetPromise={offset} />
+                <CountdownTimer timingData={timingData} offsetPromise={offset} />
             )}</code>
         </h1>
         <nav>
