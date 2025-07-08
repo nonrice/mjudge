@@ -11,7 +11,7 @@ auth_bp = Blueprint("auth", __name__)
 def register():
     data = request.get_json()
     if Users.query.filter_by(username=data["username"]).first():
-        return jsonify({"error": "Users already exists"}), 400
+        return jsonify({"error": "User already exists"}), 400
     
     if len(data["username"]) < 4 or len(data["username"]) > 20 or not all(c.isalnum() or c in ['_', '.'] for c in data["username"]):
         return jsonify({"error": "Username must be between 5 and 20 characters and contain only alphanumeric characters, underscores, and periods"}), 400
@@ -20,7 +20,7 @@ def register():
     new_user = Users(username=data["username"], password_hash=hashed_pw)
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({"message": "Users registered"}), 201
+    return jsonify({"message": "User registered"}), 201
 
 @auth_bp.route("/login", methods=["POST"])
 def login():

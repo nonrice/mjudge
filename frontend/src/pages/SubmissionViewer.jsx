@@ -6,13 +6,14 @@ import useSWR from 'swr';
 import { getToken } from '../utils/auth';
 import { fetcher } from '../utils/fetcher';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function SubmissionViewer() {
     const { submissionId } = useParams();
 
     const token = getToken();
     const { data, error } = useSWR(
-        [`http://127.0.0.1:5001/api/submission/${submissionId}`, { token }],
+        [`${API_BASE_URL}/submission/${submissionId}`, { token }],
         fetcher,
         {
             refreshInterval: 3000,

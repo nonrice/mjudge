@@ -10,6 +10,8 @@ import { calcOffset } from '../utils/contestTiming';
 import useSWR from 'swr';
 import { fetcher } from '../utils/fetcher';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export default function ContestLayout() {
     const { contestId } = useParams();
 
@@ -17,7 +19,7 @@ export default function ContestLayout() {
     const [ loading, setLoading ] = useState(true);
     const [ error, setError ] = useState(null);
     useEffect(() => {
-        fetch(`http://127.0.0.1:5001/api/contest/${contestId}/title`).then(res => {
+        fetch(`${API_BASE_URL}/contest/${contestId}/title`).then(res => {
             if (!res.ok) {
                 throw new Error("Failed to fetch contest title");
             }
@@ -32,7 +34,7 @@ export default function ContestLayout() {
     }, [contestId]);
 
     
-    const { data: timingData, error: timingError } = useSWR([`http://127.0.0.1:5001/api/contest/${contestId}/timing`, {}], fetcher);
+    const { data: timingData, error: timingError } = useSWR([`${API_BASE_URL}/contest/${contestId}/timing`, {}], fetcher);
     const offset = calcOffset();
 
     return (

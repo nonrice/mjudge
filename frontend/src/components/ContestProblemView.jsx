@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import "katex/dist/katex.min.css";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
-import { fetcher } from '../utils/fetcher';
+import { fetcher, postData } from '../utils/fetcher';
 import useSWR from 'swr';
 
 import AceEditor from 'react-ace';
@@ -19,10 +19,12 @@ import "ace-builds/esm-resolver";
 
 import { getToken, getUserFromToken } from '../utils/auth';
 
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export default function ContestProblemView() {
     const { contestId } = useParams();
     const { problemLetter } = useParams();
-
     const [language, setLanguage] = useState('python');
 
     const handleLanguageChange = (event) => {
@@ -35,28 +37,13 @@ export default function ContestProblemView() {
         }
     };
 
-    const [problem, setProblem] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { data: problem, error } = useSWR(
+        [`${API_BASE_URL}/contest/${contestId}/problem/${problemLetter}`],
+        fetcher
+    )
+
+
     const [code, setCode] = useState("");
-    useEffect(() => {
-        fetch(`http://127.0.0.1:5001/api/contest/${contestId}/problem/${problemLetter}`).then(res => {
-            if (!res.ok) {
-                throw new Error('Failed to fetch problem');
-            }
-            return res.json();
-        }).then(data => {
-            setProblem(data)
-            setLoading(false);
-        }).catch(err => {
-            setError(err.message);
-            setLoading(false);
-        });
-    }, [contestId, problemLetter]);
-
-    if (loading) return <p>Loading problem...</p>;
-    if (error) return <p>Error loading problem: {error}</p>;
-
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -70,7 +57,7 @@ export default function ContestProblemView() {
             contest_id: contestId,
         };
 
-        fetch(`http://127.0.0.1:5001/api/submit`, {
+        fetch(`${API_BASE_URL}/submit`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -97,6 +84,8 @@ export default function ContestProblemView() {
         submitButton.disabled = false;
     };
 
+    if (error) return <p>Error loading problem: {error}</p>;
+    if (!problem) return <p>Loading problem...</p>;
 
     return (
         <div>

@@ -3,11 +3,12 @@ import { useParams } from "react-router-dom";
 import { getToken } from "../utils/auth";
 import { fetcher } from "../utils/fetcher";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function ContestStandings() {
   const { contestId } = useParams();
   const { data, error, isLoading } = useSWR(
-    [`http://127.0.0.1:5001/api/contest/${contestId}/leaderboard`, {}],
+    [`${API_BASE_URL}/contest/${contestId}/leaderboard`, {}],
     fetcher,
     {
       refreshInterval: 3000,

@@ -1,9 +1,11 @@
 import useSWR from 'swr';
 import { fetcher } from './fetcher';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export async function calcOffset() {
     const startTime = Date.now();
-    const response = await fetch('http://127.0.0.1:5001/api/server_time');
+    const response = await fetch(`${API_BASE_URL}/server_time`);
     const data = await response.json();
     const endTime = Date.now();
     const duration = endTime - startTime;

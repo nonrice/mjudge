@@ -11,7 +11,9 @@ export default function Header() {
 
     return (
         <header>
-            <h2>McLean Judge</h2>
+            <h2>
+                McLean Judge
+            </h2>
             <p>
                 {user ? (
                     <i>

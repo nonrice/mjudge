@@ -23,3 +23,11 @@ export const fetcher = async ([url, options]) => {
 
   return res.json()
 }
+
+export const postData = async (url, { token, arg }) => {
+  return fetcher([url, {
+    method: "POST",
+    token: token,
+    body: arg
+  }])
+}

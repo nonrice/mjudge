@@ -15,6 +15,11 @@ def make_program(source_path, lang):
     
     return overrides[lang](source_path)
 
+def trunc_output(output, max_length=1000):
+    output_string = str(output)
+    if len(output_string) > max_length:
+        return output_string[:max_length] + f"\n... String truncated to {max_length} characters.\n"
+    return output_string
 
 def run_submission(user_sol_path, user_sol_lang, model_sol_path, model_sol_lang, checker_path, checker_lang, testcases, time_limit=2, memory_limit=256):
     time_multiplier = core.util.time_calibration.get_time_multiplier_python3_1e8_2000()
@@ -28,7 +33,7 @@ def run_submission(user_sol_path, user_sol_lang, model_sol_path, model_sol_lang,
     user_compile_result = user_program.compile()
     print(f"User compile result: {user_compile_result}")
     if user_compile_result.failure:
-        return "Compilation Error", f"Submission failed to compile with return code {user_compile_result.return_code}.\nStandard Output: {user_compile_result.stdout}\nStandard Error: {user_compile_result.stderr}", -1, -1
+        return "Compilation Error", f"Submission failed to compile with return code {user_compile_result.return_code}.\nStandard Output:\n{user_compile_result.stdout}\nStandard Error:\n{user_compile_result.stderr}", True, -1, -1
 
     model_program.compile()
     checker_program.compile()
@@ -47,17 +52,17 @@ def run_submission(user_sol_path, user_sol_lang, model_sol_path, model_sol_lang,
         print(f"Test {number}/{total_tests}: User time: {user_result.time}, Memory: {user_result.memory}, Return code: {user_result.return_code}")
         
         if user_result.failure:
-            return user_result.failure, f"Submission failed on test {number}/{total_tests} with return code {user_result.return_code}.\nTest Case:\n{testcase}\nStandard Output:\n{user_result.stdout}\nStandard Error:\n{user_result.stderr}", sample, max_time, max_memory
+            return user_result.failure, f"Submission failed on test {number}/{total_tests} with return code {user_result.return_code}.\nTest Case:\n{trunc_output(testcase)}\nStandard Output:\n{trunc_output(user_result.stdout)}\nStandard Error:\n{trunc_output(user_result.stderr)}", sample, max_time, max_memory
 
-        with open("user_output.txt", "w") as f:
+        with open("/tmp/user_output.txt", "w") as f:
             f.write(user_result.stdout)
-        with open("model_output.txt", "w") as f:
+        with open("/tmp/model_output.txt", "w") as f:
             f.write(model_result.stdout)
-        with open(f"testcase_{number}.txt", "w") as f:
+        with open(f"/tmp/testcase_{number}.txt", "w") as f:
             f.write(testcase)
         
-        checker_result = checker_program.execute(None, args=["user_output.txt", "model_output.txt", f"testcase_{number}.txt"])
+        checker_result = checker_program.execute(None, args=["/tmp/user_output.txt", "/tmp/model_output.txt", f"/tmp/testcase_{number}.txt"])
         if checker_result.failure:
-            return "Wrong Answer", f"Checker failed on test {number}/{total_tests} with return code {checker_result.return_code}.\nTest Case:\n{testcase}\nUser Standard Output:\n{user_result.stdout}\nJury Standard Output:\n{model_result.stdout}\nChecker Standard Output:\n{checker_result.stdout}\nChecker Standard Error: {checker_result.stderr}", sample, max_time, max_memory
+            return "Wrong Answer", f"Checker failed on test {number}/{total_tests} with return code {trunc_output(checker_result.return_code)}.\nTest Case:\n{trunc_output(testcase)}\nUser Standard Output:\n{trunc_output(user_result.stdout)}\nJury Standard Output:\n{trunc_output(model_result.stdout)}\nChecker Standard Output:\n{trunc_output(checker_result.stdout)}\nChecker Standard Error: {trunc_output(checker_result.stderr)}", sample, max_time, max_memory
 
     return "Accepted", f"{total_tests}/{total_tests} tests passed successfully.", True, max_time, max_memory

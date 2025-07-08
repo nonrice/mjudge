@@ -12,7 +12,7 @@ def main(*args, **kwargs):
 
     submission_id = int(sys.argv[1])
 
-    engine = create_engine("postgresql://postgres:postgres@db:5432/judgedb")
+    engine = create_engine(os.getenv("DATABASE_URL"))
 
     metadata = MetaData()
     submissions = Table("submissions", metadata, autoload_with=engine)
@@ -96,6 +96,7 @@ def main(*args, **kwargs):
         )
         conn.execute(update_query)
         conn.commit()
+
 
 
 if __name__ == "__main__":

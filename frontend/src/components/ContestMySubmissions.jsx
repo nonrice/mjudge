@@ -5,6 +5,7 @@ import { getToken } from '../utils/auth'; // Adjust the import path as necessary
 import { fetcher } from '../utils/fetcher'; // Adjust the import path as necessary
 import useSWR from 'swr';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function ContestMySubmissions() {
   const { contestId } = useParams();
@@ -35,14 +36,13 @@ export default function ContestMySubmissions() {
 
   const token = getToken();
   const { data, error } = useSWR(
-    [`http://127.0.0.1:5001/api/submissions/${contestId}`, { token }],
+    [`${API_BASE_URL}/submissions/${contestId}`, { token }],
     fetcher,
     {
       refreshInterval: 3000,
       refreshWhenHidden: false
     }
   );
-
   if (!token) {
     return <div>Please log in to view your submissions.</div>;
   }

@@ -4,7 +4,7 @@ import resource
 import tempfile
 import core.util.execution_result
 
-def limited_subprocess(command, stdin, time_limit, memory_limit):
+def limited_subprocess(command, stdin, time_limit, memory_limit, file_whitelist: list[str] = None):
     def set_limit_preexec():
         os.setsid()
         time_limit_ceil = int(time_limit + 1)
@@ -16,9 +16,12 @@ def limited_subprocess(command, stdin, time_limit, memory_limit):
         time_output_path = tmp_time.name
 
     usage_before = resource.getrusage(resource.RUSAGE_CHILDREN)
+
+    time_command = ["/usr/bin/time", "-v", "-o", time_output_path]
+
     try:
         result = subprocess.run(
-            ["/usr/bin/time", "-v", "-o", time_output_path] + command,
+            time_command + command,
             input=stdin,
             text=True,
             capture_output=True,

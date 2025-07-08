@@ -8,7 +8,7 @@ export default function About() {
         <Navbar />
         <h1>About</h1>
         <h2>Introduction</h2>
-        <p>Competitive programming is a mind sport where contestants write code to solve provided problemsets under given specifications. Competitions are held on "online judges". You might have heard of LeetCode&mdash;probably the most infamous example of one. As a sport, though, competitive programming becomes much more fun once you lose the "interview grind" mindset.</p>
+        <p>Competitive programming is a mind sport where contestants write code to solve problems under given specifications. Competitions are held on "online judges". You might have heard of LeetCode&mdash;probably the most infamous example of one. As a sport, though, competitive programming becomes much more fun once you lose the "interview grind" mindset.</p>
 
         <p>In fact, many high schools that excel in STEM competitions have their own competition programming teams. How do these teams practice? That's a question I faced with my school team as well. We initially resorted to using popular online judges. But to make a long story short, growing restrictions on usage (spurred by anti-AI crawling measures) eventually made it too inconvenient for us to do so.</p>
 

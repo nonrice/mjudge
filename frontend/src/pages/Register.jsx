@@ -3,6 +3,8 @@ import Navbar from '../components/Navbar';
 
 import { useState } from 'react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+
 export default function Register() {
     const [message, setMessage] = useState('');
 
@@ -25,7 +27,7 @@ export default function Register() {
         }
 
         try {
-            const response = await fetch("http://127.0.0.1:5001/api/register", {
+            const response = await fetch(`${API_BASE_URL}/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -34,7 +36,7 @@ export default function Register() {
             });
 
             if (response.ok) {
-                alert('Registration successful!');
+                // alert('Registration successful!');
                 setMessage('Registration successful! You can now log in.');
             } else {
                 const errorData = await response.json();
@@ -44,7 +46,7 @@ export default function Register() {
         } catch (error) {
             console.error('Error:', error);
             setMessage(error.error || 'An error occurred. Please try again.');
-            alert('An error occurred. Please try again.');
+            // alert('An error occurred. Please try again.');
         }
     };
 

@@ -1,29 +1,20 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
+import useSWR from 'swr';
+import { fetcher } from '../utils/fetcher';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export default function ContestProblems() {
   const { contestId } = useParams();
 
-  const [problems, setProblems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  useEffect(() => {
-    fetch(`http://127.0.0.1:5001/api/contest/${contestId}/problems`).then(res => {
-      if (!res.ok) {
-        throw new Error('Failed to fetch problems');
-      }
-      return res.json();
-    }).then(data => {
-      setProblems(data);
-      setLoading(false);
-    }).catch(err => {
-      setError(err.message);
-      setLoading(false);
-    });
-  }, [contestId]);
-
-  if (loading) return <p>Loading problems...</p>;
-  if (error) return <p>Error loading problems: {error}</p>;
+  const { data, error } = useSWR(
+    [`${API_BASE_URL}/contest/${contestId}/problems`],
+    fetcher
+  );
+  if (error) return <p>Error loading problems: {error.message}</p>;
+  if (!data) return <p>Loading problems...</p>;
 
   return (
     <div>
@@ -37,7 +28,7 @@ export default function ContestProblems() {
           </tr>
         </thead>
         <tbody>
-          {problems.map((problem) => (
+          {data.map((problem) => (
             <tr key={problem.id}>
               <td>{problem.letter}</td>
               <td>{problem.title}</td>
