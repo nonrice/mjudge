@@ -18,6 +18,7 @@ services:
       - FLASK_DEBUG=1
       - CHOKIDAR_USEPOLLING=true
       - PYTHONUNBUFFERED=1
+      - CORS_ORIGINS=${CORS_ORIGINS}
 
   grader:
     build: ./grader

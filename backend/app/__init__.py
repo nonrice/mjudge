@@ -9,7 +9,9 @@ def create_app():
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///site.db")
     app.config["SECRET_KEY"] = "your_jwt_secret_key"
-    CORS(app, origins=["http://127.0.0.1:4999", "http://127.0.0.1:3000"])
+
+    origins_list = os.getenv("CORS_ORIGINS", [])
+    CORS(app, origins=origins_list)
 
     db.init_app(app)
 
