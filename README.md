@@ -26,7 +26,7 @@ JWT_SECRET_KEY=some_secret_key
 
 Then start the containers with `docker compose up --build`.
 
-You might need to quit and run it again. There seem to be some dependency issues that only happen on the first run, since that's when the databases is initialized.
+You might need to quit and run it again. There seem to be some dependency issues that only happen on the first run, since that's when the database is initialized.
 
 ## Management
 I haven't implemented much admin stuff yet. You can directly modify the tables on pgAdmin.
