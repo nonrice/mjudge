@@ -46,12 +46,12 @@ some_problem
     └── ...
 ```
 
-The checker should receive three runtime arguments, which are filepaths:
-- File containing user code output
-- File containing solution code output
-- File containing the testcase
+The checker should receive three runtime arguments, which are filepaths, in the order:
+1. File containing user code output
+2. File containing solution code output
+3. File containing the testcase
 
-For the checker indicate a correct answer, exit normally with code `0`. Otherwise, exit with a nonzero code. Standard output and standard error will be copied into the feedback.
+For the checker to indicate a correct answer, exit normally with code `0`. Otherwise, exit with a nonzero code. Standard output and standard error will be copied into the feedback.
 
 `info.json` format:
 ```json
