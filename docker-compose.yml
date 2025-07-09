@@ -35,7 +35,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile  # use a two-stage Dockerfile that builds with Vite and serves with NGINX
-      args: VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
     ports:
       - "80:80"  # serve via NGINX on standard web port
     depends_on:
