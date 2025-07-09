@@ -10,7 +10,8 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
     app.config["SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 
-    origins_list = os.getenv("CORS_ORIGINS", [])
+    origins_list = os.getenv("CORS_ORIGINS", "").split(",")
+    print("Allowed CORS origins:", origins_list)
     CORS(app, origins=origins_list)
 
     db.init_app(app)

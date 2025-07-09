@@ -25,18 +25,6 @@ export default function SubmissionViewer() {
         return <div>Error loading submission: {error.message}</div>;
     }
 
-    /*
-return jsonify({
-        "id": submission.id,
-        "contest_id": submission.contest_id,
-        "problem_letter": problem_letter,
-        "code": submission.code,
-        "language": submission.language,
-        "status": submission.status,
-        "feedback": submission.feedback,
-        "timestamp": submission.timestamp.isoformat()
-    }), 200
-    */
     if (!data) {
         return <div>Loading...</div>;
     }
@@ -54,7 +42,7 @@ return jsonify({
             <p><strong>Runtime:</strong> {max_time} ms</p>
             <p><strong>Memory:</strong> {max_memory} KB</p>
             <p><strong>Language:</strong> {language}</p>
-            <p><strong>Code (<a href="#" onClick={() => navigator.clipboard.writeText(code)}>copy</a>):</strong></p>
+            <p><strong>Code:</strong></p>
             <pre>{code}</pre>
             <p><strong>Feedback:</strong></p>
             <pre>{feedback}</pre>

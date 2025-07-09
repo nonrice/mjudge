@@ -1,4 +1,4 @@
-import os
+import os, pwd, grp, traceback
 import subprocess
 import resource
 import tempfile
@@ -6,11 +6,16 @@ import core.util.execution_result
 
 def limited_subprocess(command, stdin, time_limit, memory_limit, file_whitelist: list[str] = None):
     def set_limit_preexec():
-        os.setsid()
-        time_limit_ceil = int(time_limit + 1)
-        mem_bytes = memory_limit * 1024 * 1024
-        resource.setrlimit(resource.RLIMIT_CPU, (time_limit_ceil, time_limit_ceil))
-        resource.setrlimit(resource.RLIMIT_AS, (mem_bytes, mem_bytes))
+        try:
+            os.setsid()
+            time_limit_ceil = int(time_limit + 1)
+            mem_bytes = memory_limit * 1024 * 1024
+            resource.setrlimit(resource.RLIMIT_CPU, (time_limit_ceil, time_limit_ceil))
+            resource.setrlimit(resource.RLIMIT_AS, (mem_bytes, mem_bytes))
+        except Exception as e:
+            traceback.print_exc()
+            print(f"Error setting resource limits: {e}")
+            raise RuntimeError(f"Failed to set resource limits: {e}")
 
     with tempfile.NamedTemporaryFile(delete=False) as tmp_time:
         time_output_path = tmp_time.name

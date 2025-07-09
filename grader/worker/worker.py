@@ -75,7 +75,7 @@ def main(*args, **kwargs):
         testcases_list = [ (tc.data, tc.sample) for tc in sorted(testcases_result, key=lambda x: x.number) ]
         status, feedback, in_contest_feedback, max_time, max_memory = core.runner.run_submission(
             user_sol_path,
-            user_lang,
+            user_lang, 
             model_sol_path,
             model_lang,
             checker_path,
