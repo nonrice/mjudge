@@ -7,8 +7,8 @@ db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///site.db")
-    app.config["SECRET_KEY"] = "your_jwt_secret_key"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+    app.config["SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
 
     origins_list = os.getenv("CORS_ORIGINS", [])
     CORS(app, origins=origins_list)

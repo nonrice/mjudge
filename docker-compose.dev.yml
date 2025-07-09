@@ -19,6 +19,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - PYTHONUNBUFFERED=1
       - CORS_ORIGINS=${CORS_ORIGINS}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
 
   grader:
     build: ./grader
