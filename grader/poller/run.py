@@ -71,7 +71,7 @@ def spawn_worker(submission_id):
             mem_limit="4069m",                # Memory limit
             volumes={},                      # No volume mounts for strict isolation
             read_only=True,
-            tmpfs={"/tmp": ""},
+            tmpfs={"/tmp": "exec"},
             environment={
                 "DATABASE_URL": DATABASE_URL,
             }

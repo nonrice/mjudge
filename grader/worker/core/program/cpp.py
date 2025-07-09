@@ -14,7 +14,6 @@ class CppProgram(core.program.program_base.ProgramBase):
         return limited_subprocess(compile_command, stdin=None, time_limit=20, memory_limit=1024)
 
     def execute(self, stdin: str, args: list[str] = None, time_limit: int = 2, memory_limit: int = 256):
-        os.chmod(self.exec_path, 0o755)
         execute_command = [self.exec_path]
         if args is not None:
             execute_command.extend(args)
