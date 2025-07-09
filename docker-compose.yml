@@ -42,6 +42,8 @@ services:
       - db
     environment:
       - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+    args:
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL}
 
   db:
     image: postgres:16
