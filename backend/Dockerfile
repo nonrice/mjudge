@@ -11,5 +11,4 @@ ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 ENV PORT=5000
 
-# Use a production-grade server (e.g., Gunicorn)
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app", "--workers", "4"]

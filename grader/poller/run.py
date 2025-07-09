@@ -5,15 +5,14 @@ from sqlalchemy.exc import SQLAlchemyError
 import os
 
 # CONFIG
-# DATABASE_URL = "postgresql://postgres:postgres@db:5432/judgedb"
 DATABASE_URL = os.getenv("DATABASE_URL")
 POLL_INTERVAL = int(os.getenv("POLL_INTERVAL", 10))  # seconds
 MAX_WORKERS = int(
     os.getenv("MAX_WORKERS", 1)
-)  # Maximum number of concurrent worker containers
+)
 KEEP_CONTAINERS = (
     os.getenv("KEEP_CONTAINERS", "false").lower() == "true"
-)  # Whether to keep containers after execution
+)
 
 # Initialize Docker and DB clients
 docker_client = docker.from_env()
@@ -39,16 +38,6 @@ def main():
                 if result:
                     print(f"Found submission ID {result.id}")
 
-                    # Mark as running
-                    # upd = (
-                    #     update(submissions)
-                    #     .where(submissions.c.id == result.id)
-                    #     .values(status="Running")
-                    # )
-                    # conn.execute(upd)
-                    # conn.commit()
-
-                    # Spawn worker container
                     spawn_worker(submission_id=result.id)
                 else:
                     print("No submissions to grade.")
@@ -73,17 +62,17 @@ def spawn_worker(submission_id):
     print(f"Spawning worker for submission {submission_id}")
     try:
         docker_client.containers.run(
-            "mclean-judge-worker",  # Your worker image
+            "mclean-judge-worker",
             command=[str(submission_id)],
             detach=True,
             network="mclean-judge_default",
-            auto_remove=not KEEP_CONTAINERS,  # Clean up container after exit if desired
-            cap_drop=["ALL"],                  # Drop all Linux capabilities
-            pids_limit=32,  # Limit number of threads/processes
-            security_opt=["no-new-privileges"],  # Prevent privilege escalation
+            auto_remove=not KEEP_CONTAINERS, 
+            # cap_drop=["ALL"],                  # Actually we need this for dropping caps
+            pids_limit=32,
+            # security_opt=["no-new-privileges"],  # Same here
             mem_limit="4069m",  # Memory limit
-            volumes={},  # No volume mounts for strict isolation
-            read_only=True,
+            volumes={},
+            read_only=True, # It's still read write exec for root but not nobody
             tmpfs={"/tmp": "rw,nosuid,nodev,exec"},
             environment={
                 "DATABASE_URL": DATABASE_URL,

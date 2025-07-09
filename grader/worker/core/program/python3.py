@@ -13,9 +13,9 @@ class Python3Program(core.program.program_base.ProgramBase):
             failure=None
         )
 
-    def execute(self, stdin: str, args: list[str] = None, time_limit: int = 2, memory_limit: int = 256):
+    def execute(self, stdin: str, args: list[str] = None, time_limit: int = 2, memory_limit: int = 256, become_nobody: bool = False):
         execute_command = ["python3", self.source_path]
         if args is not None:
             execute_command.extend(args)
         print("Executing command:", execute_command)
-        return limited_subprocess(execute_command, stdin=stdin, time_limit=time_limit, memory_limit=memory_limit)
+        return limited_subprocess(execute_command, stdin=stdin, time_limit=time_limit, memory_limit=memory_limit, become_nobody=become_nobody)

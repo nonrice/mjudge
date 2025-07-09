@@ -1,14 +1,3 @@
-
-#
-# return {
-#             "returncode": -1,
-#             "stdout": "",
-#             "stderr": "",
-#             "time": time_limit,
-#             "memory": -1,
-#             "failure": "Time limit exceeded"
-#         }
-
 class ExecutionResult:
     def __init__(self, return_code: int, stdout: str, stderr: str, time: float, memory: int, failure: str = None):
         self.return_code = return_code

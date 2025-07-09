@@ -11,13 +11,11 @@ export default function CountdownTimer({ timingData, offsetPromise }) {
         offsetPromise.then(resolvedOffset => {
             setOffset(resolvedOffset);
     
-            // ✅ Immediately compute remaining time on first run
             const update = () => {
                 const now = Date.now() + resolvedOffset;
                 setRemaining(Math.max(0, Math.floor(endTimeUTC.getTime() - now)));
             };
     
-            update(); // Call once right away
             interval = setInterval(update, 1000);
         });
     

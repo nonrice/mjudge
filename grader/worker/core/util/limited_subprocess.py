@@ -1,10 +1,10 @@
-import os, pwd, grp, traceback
+import os, pwd, grp, traceback, sys
 import subprocess
 import resource
 import tempfile
 import core.util.execution_result
 
-def limited_subprocess(command, stdin, time_limit, memory_limit, file_whitelist: list[str] = None):
+def limited_subprocess(command, stdin, time_limit, memory_limit, become_nobody=False):
     def set_limit_preexec():
         try:
             os.setsid()
@@ -12,17 +12,31 @@ def limited_subprocess(command, stdin, time_limit, memory_limit, file_whitelist:
             mem_bytes = memory_limit * 1024 * 1024
             resource.setrlimit(resource.RLIMIT_CPU, (time_limit_ceil, time_limit_ceil))
             resource.setrlimit(resource.RLIMIT_AS, (mem_bytes, mem_bytes))
+
+            if become_nobody:
+                pw_record = pwd.getpwnam("nobody")
+                os.setgid(pw_record.pw_gid)
+                os.setuid(pw_record.pw_uid)
+
         except Exception as e:
-            traceback.print_exc()
-            print(f"Error setting resource limits: {e}")
-            raise RuntimeError(f"Failed to set resource limits: {e}")
+            with open("/tmp/preexec_error.log", "w") as f:
+                traceback.print_exc(file=f)
+            sys.exit(1)
 
     with tempfile.NamedTemporaryFile(delete=False) as tmp_time:
         time_output_path = tmp_time.name
 
-    usage_before = resource.getrusage(resource.RUSAGE_CHILDREN)
+    if become_nobody:
+        # Give rwx perms to time output file for other (so nobody user)
+        os.chmod(time_output_path, 0o666)
 
     time_command = ["/usr/bin/time", "-v", "-o", time_output_path]
+    
+    # Erasing database url from subprocess bc it contains the credentials lmao
+    env_var_blacklist = {"DATABASE_URL"}
+    clean_env = {k: v for k, v in os.environ.items() if k not in env_var_blacklist}
+
+    usage_before = resource.getrusage(resource.RUSAGE_CHILDREN)
 
     try:
         result = subprocess.run(
@@ -31,7 +45,8 @@ def limited_subprocess(command, stdin, time_limit, memory_limit, file_whitelist:
             text=True,
             capture_output=True,
             preexec_fn=set_limit_preexec,
-            timeout=time_limit
+            timeout=time_limit,
+            env=clean_env,
         )
         usage_after = resource.getrusage(resource.RUSAGE_CHILDREN)
 

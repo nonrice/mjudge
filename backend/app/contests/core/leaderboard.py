@@ -28,7 +28,6 @@ class leaderboard_entry:
             if solved:
                 score += self.times[i] + self.attempts[i] * 20
         return score
-    # TODO handle resubmission
     # ICPC ordering
     # Comparison rules: First by solve #, then by score, then by slowest solves, finally undefined
     def __lt__(self, other):

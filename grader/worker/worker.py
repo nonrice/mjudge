@@ -73,29 +73,37 @@ def main(*args, **kwargs):
         memory_limit = problem_result.memory_limit
 
         testcases_list = [ (tc.data, tc.sample) for tc in sorted(testcases_result, key=lambda x: x.number) ]
-        status, feedback, in_contest_feedback, max_time, max_memory = core.runner.run_submission(
-            user_sol_path,
-            user_lang, 
-            model_sol_path,
-            model_lang,
-            checker_path,
-            checker_lang,
-            testcases_list,
-            time_limit=time_limit,
-            memory_limit=memory_limit
-        )
-        print(status, feedback)
-        update_query = (
-            update(submissions)
-            .where(submissions.c.id == submission_id)
-            .values(status=status)
-            .values(feedback=feedback)
-            .values(in_contest_feedback=in_contest_feedback)
-            .values(max_time=max_time)
-            .values(max_memory=max_memory)
-        )
-        conn.execute(update_query)
-        conn.commit()
+        try:
+            status, feedback, in_contest_feedback, max_time, max_memory = core.runner.run_submission(
+                user_sol_path,
+                user_lang, 
+                model_sol_path,
+                model_lang,
+                checker_path,
+                checker_lang,
+                testcases_list,
+                time_limit=time_limit,
+                memory_limit=memory_limit
+            )
+            print(status, feedback)
+            update_query = (
+                update(submissions)
+                .where(submissions.c.id == submission_id)
+                .values(status=status)
+                .values(feedback=feedback)
+                .values(in_contest_feedback=in_contest_feedback)
+                .values(max_time=max_time)
+                .values(max_memory=max_memory)
+            )
+            conn.execute(update_query)
+            conn.commit()
+        except Exception as e:
+            print("Error during submission processing:", e)
+
+        # uncomment to keep container alive for debugging
+        # import time
+        # while True:
+        #     time.sleep(60)
 
 
 
