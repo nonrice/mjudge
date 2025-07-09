@@ -14,6 +14,7 @@ services:
       - PORT=5000
       - FLASK_ENV=production
       - PYTHONUNBUFFERED=1
+      - CORS_ORIGINS=${CORS_ORIGINS}
 
   grader:
     build:
