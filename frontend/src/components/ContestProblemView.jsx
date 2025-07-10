@@ -12,6 +12,7 @@ import "ace-builds/src-noconflict/mode-python"
 import "ace-builds/src-noconflict/mode-c_cpp"
 import "ace-builds/src-noconflict/mode-java"
 import "ace-builds/src-noconflict/theme-tomorrow"
+import "ace-builds/src-noconflict/theme-tomorrow_night";
 import "ace-builds/src-noconflict/ext-language_tools"
 import "ace-builds/esm-resolver"; 
 
@@ -26,6 +27,19 @@ export default function ContestProblemView() {
     const { contestId } = useParams();
     const { problemLetter } = useParams();
     const [language, setLanguage] = useState('python');
+    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [message, setMessage] = useState("");
+
+    useEffect(() => {
+        const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        setIsDarkMode(darkModeQuery.matches);
+
+        const handleChange = (e) => setIsDarkMode(e.matches);
+        darkModeQuery.addEventListener('change', handleChange);
+
+        return () => darkModeQuery.removeEventListener('change', handleChange);
+    }, []);
+
 
     const handleLanguageChange = (event) => {
         if (event.target.value === 'python3') {
@@ -43,7 +57,15 @@ export default function ContestProblemView() {
     )
 
 
+    const storageKey = `code_${contestId}_${problemLetter}`;
     const [code, setCode] = useState("");
+    useEffect(() => {
+        const savedCode = localStorage.getItem(storageKey);
+        if (savedCode !== null) {
+            setCode(savedCode);
+        }
+    }, [storageKey]);
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -74,12 +96,12 @@ export default function ContestProblemView() {
         .then(data => {
             window.location.href = `/contest/${contestId}/mysubmissions`;
             //alert('Solution submitted successfully! Submission ID: ' + data.submission_id);
-            //setSubmitMsg("Solution submitted successfully!");
+            setMessage("Solution submitted successfully!");
             // Handle successful submission (e.g., redirect or update UI)
         })
         .catch(err => {
-            alert('Error submitting solution: ' + err.message);
-            //setSubmitMsg("Error submitting solution: " + err.message);
+            // alert('Error submitting solution: ' + err.message);
+            setMessage("Error submitting solution. Try again later.");
         });
         submitButton.disabled = false;
     };
@@ -110,15 +132,18 @@ export default function ContestProblemView() {
                     <AceEditor
                         name="code"
                         mode={language}
-                        theme="tomorrow"
+                        theme={isDarkMode ? "tomorrow_night" : "tomorrow"}
                         fontSize={14}
                         width="100%"
                         height="300px"
                         editorProps={{ $blockScrolling: true }}
-                        onChange={(newCode) => setCode(newCode)}
+                        onChange={(newCode) => {
+                            setCode(newCode);
+                            localStorage.setItem(storageKey, newCode);
+                        }}
                         value={code}
                     />
-                    <br />
+                    <p>{message || message}</p>
                     <input type="submit" value="Submit" />
                 </form>
             ) : (

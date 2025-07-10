@@ -32,7 +32,7 @@ export default function ContestStandings() {
                     <col style={{ width: '5em' }} />
                     <col style={{ width: '5em' }} />
                     {sorted_legend.map((_, index) => (
-                        <col style={{ width: '5em'}} />
+                        <col style={{ width: '6em'}} />
                     ))}
                 </colgroup>
                 <thead>

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, current_app
-from app import db
+from app import db, limiter
 from app.utils.decorators import jwt_required
 from app.models import Submissions, Users, Contests, Problems, Contest_Problems, Testcases
 import requests
@@ -9,6 +9,7 @@ submissions_bp = Blueprint("submissions", __name__)
 
 @submissions_bp.route("/submit", methods=["POST"])
 @jwt_required
+@limiter.limit("3 per minute")  # Limit to 10 submissions per minute
 def submit_code():
     data = request.get_json()
     if not data or "code" not in data or "language" not in data:

@@ -38,9 +38,9 @@ export default function ContestSubmissionViewer({ showBackLink = false }) {
             <p><strong>Memory:</strong> {max_memory} KB</p>
             <p><strong>Language:</strong> {language}</p>
             <p><strong>Code:</strong></p>
-            <pre>{code}</pre>
+            <pre><code>{code}</code></pre>
             <p><strong>Feedback:</strong></p>
-            <pre>{feedback}</pre>
+            <pre><code>{feedback}</code></pre>
         </div>
     );
 }

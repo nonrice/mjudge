@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import useSWR from 'swr';
@@ -33,7 +33,10 @@ export default function ContestProblems() {
                             <td>{problem.letter}</td>
                             <td>{problem.title}</td>
                             <td>
-                                <a href={`/contest/${contestId}/problem/${problem.letter}`}>View</a>
+                                {/* <a href={`/contest/${contestId}/problem/${problem.letter}`}>View</a> */}
+                                <Link to={`/contest/${contestId}/problem/${problem.letter}`}>
+                                    View
+                                </Link>
                             </td>
                         </tr>
                     ))}

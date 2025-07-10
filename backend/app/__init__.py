@@ -1,9 +1,12 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import os
 
 db = SQLAlchemy()
+limiter = Limiter(key_func=get_remote_address)
 
 def create_app():
     app = Flask(__name__)
@@ -15,6 +18,11 @@ def create_app():
     CORS(app, origins=origins_list)
 
     db.init_app(app)
+
+    global limiter
+    limiter.init_app(app)
+    limiter.storage_uri = "memory://"
+    limiter.default_limits = ["3 per second"]
 
     # Register blueprints
     from .auth.routes import auth_bp
