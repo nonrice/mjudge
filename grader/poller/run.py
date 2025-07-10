@@ -39,8 +39,6 @@ def main():
                     print(f"Found submission ID {result.id}")
 
                     spawn_worker(submission_id=result.id)
-                else:
-                    print("No submissions to grade.")
         except SQLAlchemyError as e:
             print("DB error:", e)
 
