@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getToken } from '../utils/auth'; // Adjust the import path as necessary
 
@@ -64,7 +64,8 @@ export default function ContestMySubmissions() {
                             )
                         }
                         <td>
-                            <a href={`/submission/${submission.id}`} target="_blank" rel="noopener noreferrer">View</a>
+                            {/* <a href={`/contest/${contestId}/submission/${submission.id}`}>View</a> */}
+                            <Link to={`/contest/${contestId}/submission/${submission.id}`}>View</Link>
                             {/* <a href={`/submission/${submission.id}`}>View</a> */}
                         </td>
                     </tr>
