@@ -1,13 +1,14 @@
 from flask import Blueprint, request, jsonify, current_app
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt, datetime
-from app import db
+from app import db, limiter
 from app.models import Users
 from app.utils.decorators import jwt_required
 
 auth_bp = Blueprint("auth", __name__)
 
 @auth_bp.route("/register", methods=["POST"])
+@limiter.limit("3 per minute")
 def register():
     data = request.get_json()
     if Users.query.filter_by(username=data["username"]).first():
@@ -23,6 +24,7 @@ def register():
     return jsonify({"message": "User registered"}), 201
 
 @auth_bp.route("/login", methods=["POST"])
+@limiter.limit("3 per minute")
 def login():
     data = request.get_json()
     user = Users.query.filter_by(username=data["username"]).first()

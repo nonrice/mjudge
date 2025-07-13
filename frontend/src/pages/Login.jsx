@@ -24,7 +24,11 @@ export default function Login() {
         })
         .then((res) => {
             if (!res.ok) {
-                throw new Error("Login failed");
+                if (res.status === 401) {
+                    throw new Error("Invalid username or password");
+                }
+
+                throw new Error(res.error ? res.error : "Login failed");
             }
             return res.json();
         })
@@ -33,9 +37,9 @@ export default function Login() {
             navigate("/"); // Redirect to home pag`
         })
         .catch((err) => {
-            // alert("Login failed. Please check your credentials.");
-            setMessage("Login failed. Please check your credentials.");
-            console.error(err);
+            console.error("Error:", err);
+            setMessage(err.message || "An error occurred.");
+            // alert(err.message || "An error occurred. Please try again.");
         });
     };
 
