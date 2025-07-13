@@ -18,6 +18,8 @@ export default function ContestLayout() {
     const [ title, setTitle ] = useState("");
     const [ loading, setLoading ] = useState(true);
     const [ error, setError ] = useState(null);
+    const [offset, setOffset] = useState();
+
     useEffect(() => {
         fetch(`${API_BASE_URL}/contest/${contestId}/title`).then(res => {
             if (!res.ok) {
@@ -33,9 +35,13 @@ export default function ContestLayout() {
         });
     }, [contestId]);
 
+    useEffect(() => {
+        calcOffset().then(setOffset);
+    }, []);
+
     
-    const { data: timingData, error: timingError } = useSWR([`${API_BASE_URL}/contest/${contestId}/timing`, {}], fetcher);
-    const offset = calcOffset();
+    const { data: timingData, error: timingError } = useSWR([`${API_BASE_URL}/contest/${contestId}/timing`], fetcher, {
+    });
 
     return (
     <div>
@@ -45,7 +51,7 @@ export default function ContestLayout() {
         <h1>
             {title}<br></br>
             <code>{timingData && offset !== undefined && (
-                <CountdownTimer timingData={timingData} offsetPromise={offset} />
+                <CountdownTimer timingData={timingData} offset={offset} />
             )}</code>
         </h1>
         <nav>

@@ -27,12 +27,12 @@ export default function ContestStandings() {
             <h2>Standings</h2>
             <table style={{tableLayout: "fixed"}}>
                 <colgroup>
-                    <col style={{ width: '4em' }} />
-                    <col />
-                    <col style={{ width: '5em' }} />
-                    <col style={{ width: '5em' }} />
+                    <col key="rankno" style={{ width: '4em' }} />
+                    <col key="name" />
+                    <col key="solved" style={{ width: '5em' }} />
+                    <col key="score" style={{ width: '5em' }} />
                     {sorted_legend.map((_, index) => (
-                        <col style={{ width: '6em'}} />
+                        <col key={index} style={{ width: '6em'}} />
                     ))}
                 </colgroup>
                 <thead>
