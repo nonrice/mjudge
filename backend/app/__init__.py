@@ -12,6 +12,11 @@ def create_app():
     app = Flask(__name__)
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
     app.config["SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
+
+    options = app.config.get("SQLALCHEMY_ENGINE_OPTIONS", {})
+    options["pool_pre_ping"] = True
+    app.config["SQLALCHEMY_ENGINE_OPTIONS"] = options
+
     app.config["RATELIMIT_STORAGE_URI"] = "memory://"
     app.config["RATELIMIT_DEFAULT"] = "60 per minute"
 

@@ -1,7 +1,8 @@
 import time
+import datetime
 import docker
 from sqlalchemy import create_engine, Table, MetaData, select, update
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import SQLAlchemyError, OperationalError
 import os
 
 # CONFIG
@@ -16,16 +17,16 @@ KEEP_CONTAINERS = (
 
 # Initialize Docker and DB clients
 docker_client = docker.from_env()
-engine = create_engine(DATABASE_URL)
 metadata = MetaData()
 
-
 def main():
-    submissions = Table("submissions", metadata, autoload_with=engine)
+    engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+    operror_count = 0
 
     print("Grading poller started.")
     while True:
         try:
+            submissions = Table("submissions", metadata, autoload_with=engine)
             with engine.connect() as conn:
                 # Find one ungraded submission
                 stmt = (
@@ -39,6 +40,19 @@ def main():
                     print(f"Found submission ID {result.id}")
 
                     spawn_worker(submission_id=result.id)
+            operror_count = 0
+        except OperationalError as e:
+            print("OperationalError, likely due to stale connection or DNS:", e)
+            time.sleep(5)
+
+            operror_count += 1
+
+            if operror_count > 5:
+                print("Too many operational errors, resetting database connection.")
+                engine.dispose()
+                engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+
+            continue
         except SQLAlchemyError as e:
             print("DB error:", e)
 
