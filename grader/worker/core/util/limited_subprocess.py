@@ -10,6 +10,8 @@ def limited_subprocess(command, stdin, time_limit, memory_limit, become_nobody=F
             os.setsid()
             time_limit_ceil = int(time_limit + 1)
             mem_bytes = memory_limit * 1024 * 1024
+            if become_nobody:
+                resource.setrlimit(resource.RLIMIT_NPROC, (50, 50)) # because jvm is a btch. I would do 1 if i could
             resource.setrlimit(resource.RLIMIT_CPU, (time_limit_ceil, time_limit_ceil))
             resource.setrlimit(resource.RLIMIT_AS, (mem_bytes, mem_bytes))
 
