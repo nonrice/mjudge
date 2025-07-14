@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export default function CountdownTimer({ timingData, offset }) {
-    const endTimeUTC = new Date(timingData.end_time);
+    const endTime = new Date(timingData.end_time + "Z");
     const [remaining, setRemaining] = useState(-1);
 
     useEffect(() => {
@@ -9,13 +9,13 @@ export default function CountdownTimer({ timingData, offset }) {
 
         const update = () => {
             const now = Date.now() + offset;
-            setRemaining(Math.max(0, Math.floor(endTimeUTC.getTime() - now)));
+            setRemaining(Math.max(0, Math.floor(endTime.getTime() - now)));
         };
 
         update();
         const interval = setInterval(update, 1000);
         return () => clearInterval(interval);
-    }, [endTimeUTC, offset]);
+    }, [endTime, offset]);
 
     if (remaining < 0) return <span>Loading...</span>;
     if (remaining === 0) return <span>Completed</span>;
