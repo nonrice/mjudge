@@ -90,8 +90,9 @@ def spawn_worker(submission_id):
                 "DATABASE_URL": DATABASE_URL,
             },
             user="0:0",
-            cpus=1.0 # Won't make a difference on cheapo 1vcpu machines. When >1cpu, prevents threading from giving substantial advantage
-                     # See ../worker/core/util/limited_subprocess.py. I can't strictly enforce 1 thread
+            cpu_quota=100000,
+            cpu_period=100000 # Won't make a difference on cheapo 1vcpu machines. When >1cpu, prevents threading from giving substantial advantage
+                            # See ../worker/core/util/limited_subprocess.py. I can't strictly enforce 1 thread
         )
     except docker.errors.DockerException as e:
         print("Docker error:", e)
