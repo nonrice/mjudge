@@ -3,7 +3,7 @@
 McLean Judge (mjudge) is an online competitive programming judge. It is designed to be easily deployable and suitable for frequent practice contests.
 
 ## About
-[Here's the source for the default about page.](frontend/src/pages/About.jsx)
+As of May 2025, many popular competitive programming sites put in place various restrictions to combat AI scraping. McLean Competitive Programming historically hosted practice contests using a 3rd-party proxy site, which, as a consequence, has become very inconvenient to use. McLean Judge was made to 1) remove McLean Competitive Programming's reliance on outside resources and 2) to improve freedom in problem setting for practice contests.
 
 ## Deployment
 You can deploy very quickly on pretty much any VPS.
@@ -26,12 +26,10 @@ JWT_SECRET_KEY=some_secret_key
 
 Then start the containers with `docker compose up --build`.
 
-You might need to quit and run it again. There seem to be some dependency issues that only happen on the first run, since that's when the database is initialized.
-
 ## Management
-I haven't implemented much admin stuff yet. You can directly modify the tables on pgAdmin.
+Direct database access can suffice to operate the judge, but a more user-friendly administration interface is being worked on. 
 
-For uploading problems there's a special endpoint `/api/admin/upload_prob`. `POST` a `.zip` file there to automatically populate the DB tables. To be considered an admin, your token must be of an account named `eric`.
+For uploading problems there's a special endpoint `/api/admin/upload_prob`. Once authenticated with an administrator account, `POST` a `.zip` file there to automatically populate the DB tables.
 
 Archive format:
 ```
@@ -70,6 +68,3 @@ The `"samples"` entry determines the testcase numbers, which, upon failing, will
 There are development Docker configurations. Use them by including `-f docker-compose.dev.yml` in calls to compose.
 
 McLean Judge uses a React frontend with Vite tooling, Flask backend, and Postgres database.
-
-The grading infrastructure is written in Python. A grading container polls the submissions table for waiting submissions and spawns individual, ephemeral worker containers to run them. Sandboxing is done through containerizing with Docker and privilege removal.
-
